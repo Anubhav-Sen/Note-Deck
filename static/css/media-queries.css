@@ -1,0 +1,22 @@
+@media only screen and (max-width: 420px) {
+
+    #header {
+        padding: 0 16px 0 16px;
+    }
+
+    #search-container {
+        padding: 0 8px 0 16px;
+    }
+
+    #profile-menu-button {
+        margin-left: 8px;
+    }
+
+}
+
+@media only screen and (max-width: 646px) {
+
+    #header .Note-Deck-logo {
+        display: none;
+    }
+}

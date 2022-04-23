@@ -1,0 +1,96 @@
+#header {
+    height: 64px;
+    padding: 0 32px 0 32px;
+    border-bottom: 1px solid #DDDDDD;
+    grid-area: header;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#menu-button {
+    height: 40px !important;
+    width: 40px !important;
+    margin: auto 0 auto -8px;
+    background-color: white;
+    border-radius: 24px;
+    border: none;
+    flex-shrink: 0;
+}
+
+#menu-button:hover {
+    background-color: #F2F2F2;
+
+}
+
+#header .Note-Deck-logo {
+    height: 32px;
+    width: auto;
+    margin-left: 16px;
+}
+
+#search-container {
+    height: 32px;
+    border-radius: 16px;
+    padding: 0 16px 0 32px;
+    margin-left: auto;
+    background-color: #F2F2F2;
+    display: flex;
+    align-items: center;
+}
+
+#search-container input {
+    all: unset;
+    width: 90%;
+    color: #747474;
+    font-size: 16px;
+    font-family: consolas, 'Segoe UI', sans-serif;
+    font-weight: bold;
+
+}
+
+#search-container button {
+    height: 26px !important;
+    width: 26px !important;
+    margin-left: auto;
+    padding: 4px;
+    border-radius: 16px;
+    border: none;
+    background-color: #F2F2F2;
+}
+
+#search-container button:hover {
+    background-color: #D4D4D4;
+}
+
+#search-container button img {
+    height: 16px;
+    width: 16px;
+}
+
+#search-container ::placeholder {
+    color: #A6A6A6;
+}
+
+#search-container ::-ms-input-placeholder {
+    color: #A6A6A6;
+}
+
+#profile-menu-button {
+    height: 32px !important;
+    width: 32px !important;
+    margin-left: 16px;
+    border: none;
+    border-radius: 16px;
+    background-color: #747474;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+#profile-menu-button:hover {
+    background-color: #828282;
+}
