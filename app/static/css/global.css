@@ -1,0 +1,107 @@
+body {
+    margin: 0;
+    overflow-y: hidden;
+    font-family: consolas, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #747474;
+}
+
+#grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-areas: "header header" "deck-nav card-canvas";
+}
+
+#overlay-background {
+    height: calc(100vh - 64px);
+    width: 100vw;
+    margin: 64px 0 0 272px;
+    position: absolute;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.Note-Deck-Logo {
+    display: inline-block;
+    background-image: url('/static/assets/Note-Deck-logo.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.add-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Add-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.action-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Action-Menu.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.edit-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Edit-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.delete-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Delete-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.deck-icon {
+    height: 60px;
+    width: 45px;
+    display: inline-block;
+    background-image: url('/static/assets/Deck-Icon.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.action-buttons-container {
+    position: absolute;
+    padding: 8px 0 8px 0;
+    outline: 2px solid #DDDDDD;
+    border-radius: 4px;
+    background-color: white;
+    display: none;
+    flex-direction: column;
+    z-index: 2;
+    top: 42px;
+    right: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.action-buttons-container button{
+    all: unset;
+    padding: 8px 16px 8px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-buttons-container button:hover{
+    background-color: #F2F2F2;
+}

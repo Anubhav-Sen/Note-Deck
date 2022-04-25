@@ -13,10 +13,20 @@
     height: 40px !important;
     width: 40px !important;
     margin: auto 0 auto -8px;
+    padding: 8px;
     background-color: white;
     border-radius: 24px;
     border: none;
     flex-shrink: 0;
+}
+
+#menu-button-icon {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background-image: url('/static/assets/Menu-Button.svg');
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
 }
 
 #menu-button:hover {
@@ -24,9 +34,9 @@
 
 }
 
-#header .Note-Deck-logo {
+#header .Note-Deck-Logo {
     height: 32px;
-    width: auto;
+    width: 178px;
     margin-left: 16px;
 }
 
@@ -64,9 +74,13 @@
     background-color: #D4D4D4;
 }
 
-#search-container button img {
+#search-button-icon {
+    display: inline-block;
     height: 16px;
     width: 16px;
+    background-image: url('/static/assets/Search-Button.svg');
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
 }
 
 #search-container ::placeholder {
