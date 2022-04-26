@@ -74,6 +74,33 @@ body {
     background-size: auto auto;
 }
 
+.list-view-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/List-View-Icon.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.pallet-icon-dark {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Color-Pallet-Dark.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.menu-icon-small {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Menu-Button.svg');
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+}
+
 .action-buttons-container {
     position: absolute;
     padding: 8px 0 8px 0;

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/media-queries.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/deck-nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card-canvas.css') }}">
 
     <title>{% block title %}{% endblock %}</title>
 
@@ -24,69 +25,7 @@
 
 <body>
 
-    {% block body %}
-
-    <div id="grid-container">
-
-        <div id="header">
-
-            <button id="menu-button"><i id="menu-button-icon"></i></button>
-
-            <span class="Note-Deck-Logo"></span>
-
-            <div id="search-container">
-                <input type="text" placeholder="Quick Search">
-                <button><i id="search-button-icon"></i></button>
-            </div>
-
-            <button id="profile-menu-button">{{username[0]}}</button>
-
-        </div>
-
-        <nav id="deck-navigation">
-
-            <div id="create-deck-form-container">
-
-                <i id="pallet-icon"></i>
-                <input type="color" value="#747474">
-                <input type="text" placeholder="Deck Title">
-                <button><i class="add-button-icon"></i></button>
-
-            </div>
-
-            <div id="no-decks">
-                <i class="deck-icon"></i>
-                <span>No decks</span>
-            </div>
-
-            <div id="decks">
-
-                {% for deck in decks %}
-                <div class="deck">
-    
-                    <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title)}}">
-    
-                        <span class="deck-color" style="--bgcolor: {{deck.deck_color}};"></span>
-                        <span class="deck-title">{{deck.deck_title}}</span>
-                    </a>
-    
-                    <button class="deck-action-button"><i class="action-button-icon"></i></button>
-    
-                    <div class="action-buttons-container">
-                        <button><i class="edit-button-icon"></i>Edit</button>
-                        <button><i class="delete-button-icon"></i>Delete</button>
-                    </div>
-    
-                </div>
-                {% endfor %} 
-
-            </div>   
-
-        </nav>
-
-    </div>
-
-    {% endblock %}
+    {% block body %}{% endblock %}
 
 </body>
 

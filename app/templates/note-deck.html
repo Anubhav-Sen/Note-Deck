@@ -1,3 +1,99 @@
 {% extends 'base.html' %}
 
-{% block title %}Note-Deck | {{deck_title}}{% endblock %}
+{% block title %}Note-Deck | {{page_title}}{% endblock %}
+
+{% block body %}
+<div id="grid-container">
+
+    <div id="header">
+
+        <button id="menu-button"><i id="menu-button-icon"></i></button>
+
+        <span class="Note-Deck-Logo"></span>
+
+        <div id="search-container">
+            <input type="text" placeholder="Quick Search">
+            <button><i id="search-button-icon"></i></button>
+        </div>
+
+        <button id="profile-menu-button">{{username[0]}}</button>
+
+    </div>
+
+    <nav id="deck-navigation">
+
+        <div id="create-deck-form-container">
+
+            <i id="pallet-icon"></i>
+            <input type="color" value="#747474">
+            <input type="text" placeholder="Deck Title">
+            <button><i class="add-button-icon"></i></button>
+
+        </div>
+
+        <div id="no-decks">
+            <i class="deck-icon"></i>
+            <span>No decks</span>
+        </div>
+
+        <div id="decks">
+
+            {% for deck in decks %}
+            <div class="deck">
+
+                <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title, color = deck.deck_color)}}">
+
+                    <span class="deck-color" style="--bgcolor: {{deck.deck_color}};"></span>
+                    <span class="deck-title">{{deck["deck_title"]}}</span>
+                </a>
+
+                <button class="deck-action-button"><i class="action-button-icon"></i></button>
+
+                <div class="action-buttons-container">
+                    <button><i class="edit-button-icon"></i>Edit</button>
+                    <button><i class="delete-button-icon"></i>Delete</button>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </nav>
+
+    <div id="overlay-background"></div>
+
+    <main id="card-canvas">
+
+        <div id="no-deck">
+            <span>Create some decks to get started!</span>
+            <ul>
+                <li><span>Go to the menu<i class = "menu-icon-small"></i></span></li>
+                <li><span>Give your deck a name.</span></li>
+                <li><span>Pick a color for you deck. <i class = "pallet-icon-dark"></i></span></li>
+                <li><span>Finally add your deck. <i class = "add-button-icon"></i></span></li>
+            </ul>
+        </div>
+
+        <div id="deck">
+
+            <div id="deck-header">
+
+                <i id="card-icon" style="--bgcolor: {{color}};"></i>
+                <span id="deck-title">{{page_title}}</span>
+
+                <button id="change-view-button">
+                    <i class="list-view-icon"></i>
+                    <span>List</span>
+                </button>
+
+            </div>
+
+            <button id="add-card-button"><i class="add-button-icon"></i></button>
+
+        </div>
+
+    </main>
+
+</div>
+{% endblock %}

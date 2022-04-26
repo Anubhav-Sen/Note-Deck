@@ -1,0 +1,110 @@
+#card-canvas {
+    height: calc(100vh - 64px);
+    width: calc(100vw - 272px);
+    grid-area: card-canvas;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    background-color: white;
+}
+
+#no-deck {   
+    min-height: 100%;
+    margin: 0 16px 0 16px;
+    color: #a6a6a6;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#no-deck ul span{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+#deck {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#deck-header {
+    margin: 40px;
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: stretch;
+}
+
+#card-icon {
+    height: 34px;
+    width: 22px;
+    border-radius: 4px;
+    background-color: var(--bgcolor);
+    flex-shrink: 0;
+}
+
+#deck-title {
+    color: #646464;
+    font-weight: bold;
+    font-size: 48px;
+    flex-shrink: 0;
+    margin: 0 auto 0 8px;
+}
+
+#change-view-button {
+    height: 32px;
+    color: #8D8D8D;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: consolas, 'Segoe UI', sans-serif;
+    margin-left: auto;
+    padding: 0 16px 0 16px;
+    border: none;
+    outline: 1px solid #DDDDDD;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #FFFFFF;
+}
+
+#change-view-button:hover {
+    background-color: #F2F2F2;
+    outline: none;
+}
+
+#add-card-button {
+    all: unset;
+    height: 64px !important;
+    width: 64px !important;
+    border-radius: 32px;
+    position: absolute;
+    top: calc(100vh - 96px);
+    left: 32px;
+    background-color: #F2F2F2;
+}
+
+#add-card-button i {
+    height: 24px;
+    width: 24px;
+    background-size: 24px 24px;
+    margin: 20px;
+}
+
+#add-card-button:hover {
+    background-color: #D4D4D4;
+}
