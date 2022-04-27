@@ -101,34 +101,56 @@ body {
     background-size: 16px 16px;
 }
 
-.action-buttons-container {
-    position: absolute;
-    padding: 8px 0 8px 0;
-    outline: 2px solid #DDDDDD;
-    border-radius: 4px;
-    background-color: white;
-    display: none;
-    flex-direction: column;
-    z-index: 2;
-    top: 42px;
-    right: 20px;
+.close-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Close-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
 }
 
-.hidden {
-    display: none;
+.bold-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Bold-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
 }
 
-.action-buttons-container button{
-    all: unset;
-    padding: 8px 16px 8px 16px;
-    font-size: 16px;
-    font-weight: bold;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
+.italic-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Italic-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
 }
 
-.action-buttons-container button:hover{
-    background-color: #F2F2F2;
+.underline-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Underline-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.list-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/List-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
+}
+
+.image-button-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-image: url('/static/assets/Image-Button.svg');
+    background-repeat: no-repeat;
+    background-size: auto auto;
 }

@@ -41,7 +41,7 @@
             {% for deck in decks %}
             <div class="deck">
 
-                <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title, color = deck.deck_color)}}">
+                <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title, deck_id = deck.deck_id, color = deck.deck_color)}}">
 
                     <span class="deck-color" style="--bgcolor: {{deck.deck_color}};"></span>
                     <span class="deck-title">{{deck["deck_title"]}}</span>
@@ -49,7 +49,7 @@
 
                 <button class="deck-action-button"><i class="action-button-icon"></i></button>
 
-                <div class="action-buttons-container">
+                <div class="deck-action-buttons-container">
                     <button><i class="edit-button-icon"></i>Edit</button>
                     <button><i class="delete-button-icon"></i>Delete</button>
                 </div>
@@ -68,10 +68,10 @@
         <div id="no-deck">
             <span>Create some decks to get started!</span>
             <ul>
-                <li><span>Go to the menu<i class = "menu-icon-small"></i></span></li>
+                <li><span>Go to the menu<i class="menu-icon-small"></i></span></li>
                 <li><span>Give your deck a name.</span></li>
-                <li><span>Pick a color for you deck. <i class = "pallet-icon-dark"></i></span></li>
-                <li><span>Finally add your deck. <i class = "add-button-icon"></i></span></li>
+                <li><span>Pick a color for you deck. <i class="pallet-icon-dark"></i></span></li>
+                <li><span>Finally add your deck. <i class="add-button-icon"></i></span></li>
             </ul>
         </div>
 
@@ -86,6 +86,78 @@
                     <i class="list-view-icon"></i>
                     <span>List</span>
                 </button>
+
+            </div>
+
+            <div id="cards-container">
+
+                <div class="card" id="card-form">
+
+                    <div class="card-image-container">
+
+                        <button id="close-image-button"><i class="close-button-icon"></i></button>
+
+                        <img id="preview-image" src="">
+
+                    </div>
+
+                    <div id="card-form-header">
+
+                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable></div>
+
+                    </div>
+
+                    <div id="card-form-content">
+
+                        <div class="card-textarea editable" role="textbox" data-placeholder="Write a text-card"
+                            contenteditable></div>
+
+                    </div>
+
+                    <div class="rich-text-buttons-container">
+                        <button id="bold-button"><i class="bold-button-icon"></i></button>
+                        <button id="underline-button"><i class="underline-button-icon"></i></button>
+                        <button id="italic-button"><i class="italic-button-icon"></i></button>
+                        <button id="list-button"><i class="list-button-icon"></i></button>
+                        <label for="image-input-button"><i class="image-button-icon"></i></label>
+                        <input id="image-input-button" type="file" accept="image/*">
+                    </div>
+
+                    <div class="card-form-actions-container">
+                        <button id="close-card-form-button">Close</button>
+                        <button id="save-data-card-form-button">Save</button>
+                    </div>
+
+                </div>
+                
+                {% for card in cards %}
+                <div class="card">
+
+                    <div class="card-image-container">
+                        <img class src="{{card.image_url}}">
+                    </div>
+
+                    <div class="card-header">
+
+                        <div class="card-title">{{card.title}}</div>
+
+                        <button class="card-action-button"><i class="action-button-icon"></i></button>
+
+                        <div class="card-action-buttons-container">
+                            <button><i class="edit-button-icon"></i>Edit</button>
+                            <button><i class="delete-button-icon"></i>Delete</button>
+                        </div>
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="card-textarea">{{card.content | safe}}</div>
+
+                    </div>
+
+                </div>
+                {% endfor %}
 
             </div>
 
