@@ -5,6 +5,7 @@ var deckNav = document.getElementById('deck-navigation');
 var decks = document.getElementById('decks');
 var deckActionButtons = document.querySelectorAll('.deck-action-button');
 var noDecksMessage = document.getElementById('no-decks');
+var noCardsMessage = document.getElementById('no-cards');
 var cardCanvas = document.getElementById('card-canvas');
 var deck = document.getElementById('deck');
 var changeViewButton = document.getElementById('change-view-button');
@@ -37,6 +38,7 @@ window.addEventListener('load', checkWindowWidth);
 window.addEventListener('load', checkColumnCount);
 window.addEventListener('load', generateGrid);
 window.addEventListener('load', ifNoDecks);
+window.addEventListener('load', ifNoCards);
 
 window.addEventListener('resize', checkWindowWidth);
 window.addEventListener('resize', checkColumnCount);
@@ -134,10 +136,17 @@ regenGridOnElementResize.observe(cardContent);
 
 function ifNoDecks(){
 
-    if (decks.innerHTML.trim() === "") {
+    if (decks.childElementCount === 0) {
         noDecksMessage.style.display = "flex";
         noDeckMessage.style.display = "flex";
         deck.style.display = "none";
+    }
+}
+
+function ifNoCards(){
+
+    if (grid.childElementCount === 1) {
+        noCardsMessage.style.display = "flex";
     }
 }
 
@@ -288,15 +297,15 @@ function checkColumnCount() {
 }
 
 function openCardForm() {
-
+    
     cardForm.style.display = "flex";
-
+    noCardsMessage.style.display = "none";
 }
 
 function closeCardForm() {
 
     cardForm.style.display = "none";
-
+    ifNoCards();
 }
 
 function toggleView() {
@@ -321,7 +330,7 @@ function toggleView() {
 
 function plainText() {
 
-    cardTitleArea.innerHTML = cardTitleArea.innerText;
+    cardTitleArea.innerHTML = cardTitleArea.innerHTML.replace(/(<([^>]+)>)/gi, "");
     var textSelected = window.getSelection();
     var selectionRange = document.createRange();
 

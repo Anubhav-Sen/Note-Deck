@@ -44,7 +44,7 @@
                 <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title, deck_id = deck.deck_id, color = deck.deck_color)}}">
 
                     <span class="deck-color" style="--bgcolor: {{deck.deck_color}};"></span>
-                    <span class="deck-title">{{deck["deck_title"]}}</span>
+                    <span class="deck-title">{{deck.deck_title}}</span>
                 </a>
 
                 <button class="deck-action-button"><i class="action-button-icon"></i></button>
@@ -87,6 +87,11 @@
                     <span>List</span>
                 </button>
 
+            </div>
+
+            <div id="no-cards">
+                <span>No cards in this deck</span>
+                <span>Add a card using the button below <i class="add-button-icon"></i></span>
             </div>
 
             <div id="cards-container">

@@ -24,6 +24,8 @@ decks = [
 
 ]
 
+cards1 = []
+
 cards = [
     {
         "title": "CS Card 1",

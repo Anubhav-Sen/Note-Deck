@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, abort
 from app.dummydata import username, decks, cards
+import logging
 
 blueprint = Blueprint('deck_pages', __name__)
 
@@ -16,15 +17,19 @@ def noteDeck(deck, deck_id, color):
     cardlist = []
 
     if len(decks) == 0:
+        logging.warning(f"{deck} dosen't exist!")
         return abort(404)
     elif len(decks) > 0:
         for card in cards: 
             if card["deck_id"] == deck_id:
-                cardlist.append(card)
-                
+                cardlist.append(card) 
         return render_template('note-deck.html', page_title = deck, decks = decks, deck_id = deck_id, username = username, color = color, cards = cardlist)
 
 @blueprint.route('/get-started')
 def getStarted():
-    return render_template('note-deck.html', page_title = "Get-started", decks = decks, deck_id = "#", username = username, color = "#", cards = "")
+
+    if len(decks) == 0:
+        return render_template('note-deck.html', page_title = "Get-Started", decks = decks, deck_id = "#", username = username, color = "#", cards = "")
+    elif len(decks) > 0:
+        return abort(404)
 

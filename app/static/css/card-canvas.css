@@ -31,7 +31,10 @@
     margin-bottom: 8px;
 }
 
+
+
 #deck {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -106,6 +109,28 @@
 
 #add-card-button:hover {
     background-color: #D4D4D4;
+}
+
+#no-cards {
+    height: calc(100vh - 304px);
+    margin: 0 16px 0 16px;
+    text-align: center;
+    font-weight: bold;
+    color: #a6a6a6;
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#no-cards span{
+    all: inherit;
+    flex-direction: row;
+    gap: 8px;
+    width: auto;
+    height: auto;
 }
 
 #cards-container {
