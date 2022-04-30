@@ -3,7 +3,7 @@ def test_index_redirect(client):
     assert response.status_code == 302
 
 def test_note_deck_success(client):
-    response = client.get('/decks/<deck>/<deck_id>/<color>')
+    response = client.get('/decks/<deck_id>/<deck_title>/<deck_color>')
     assert response.status_code == 200 or 404
     
     if response.status_code == 200:
