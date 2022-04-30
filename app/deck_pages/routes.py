@@ -1,35 +1,47 @@
 from flask import Blueprint, render_template, redirect, url_for, abort
-from app.dummydata import username, decks, cards
+from .models import Deck, Card, Image
 import logging
+
+username = 'Dwight'
+cards = []
 
 blueprint = Blueprint('deck_pages', __name__)
 
 @blueprint.route('/')
 def index():
-    if len(decks) == 0:
+
+    deck_count = Deck.query.count()
+    first_deck = Deck.query.first()
+    
+    if deck_count == 0:
         return redirect(url_for('deck_pages.getStarted'))
-    elif len(decks) > 0:
-        return redirect(url_for('deck_pages.noteDeck', deck = decks[0]["deck_title"], deck_id = decks[0]["deck_id"], color = decks[0]["deck_color"]))
 
-@blueprint.route('/decks/<deck>/<deck_id>/<color>')
-def noteDeck(deck, deck_id, color):
+    elif deck_count > 0:
+        return redirect(url_for('deck_pages.noteDeck',  deck_id = first_deck.id , deck_title = first_deck.title, deck_color = first_deck.color))
 
-    cardlist = []
 
-    if len(decks) == 0:
-        logging.warning(f"{deck} dosen't exist!")
+@blueprint.route('/decks/<deck_id>/<deck_title>/<deck_color>')
+def noteDeck(deck_id, deck_title, deck_color):
+    
+    decks = Deck.query.all()
+    deck_count = Deck.query.count()
+    cards = Card.query.filter_by(deck_id = deck_id)
+    images = Image.query.all()
+
+    if deck_count == 0:
+        logging.warning(f"{deck_title} dosen't exist!")
         return abort(404)
+
     elif len(decks) > 0:
-        for card in cards: 
-            if card["deck_id"] == deck_id:
-                cardlist.append(card) 
-        return render_template('note-deck.html', page_title = deck, decks = decks, deck_id = deck_id, username = username, color = color, cards = cardlist)
+        return render_template('note-deck.html', username = username, decks = decks, deck_id = deck_id, deck_title = deck_title, deck_color = deck_color, cards = cards, images = images)
 
 @blueprint.route('/get-started')
 def getStarted():
+    
+    deck_count = Deck.query.count()
 
-    if len(decks) == 0:
-        return render_template('note-deck.html', page_title = "Get-Started", decks = decks, deck_id = "#", username = username, color = "#", cards = "")
-    elif len(decks) > 0:
+    if deck_count == 0:
+        return render_template('note-deck.html', username = username, decks = '', deck_id = '#', deck_title = 'Get-Started', deck_color = '#', cards = '', images='')
+
+    elif deck_count > 0:
         return abort(404)
-

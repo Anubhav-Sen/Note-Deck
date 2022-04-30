@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Note-Deck | {{page_title}}{% endblock %}
+{% block title %}Note-Deck | {{deck_title}}{% endblock %}
 
 {% block body %}
 <div id="grid-container">
@@ -41,10 +41,10 @@
             {% for deck in decks %}
             <div class="deck">
 
-                <a href="{{url_for('deck_pages.noteDeck', deck = deck.deck_title, deck_id = deck.deck_id, color = deck.deck_color)}}">
+                <a href="{{url_for('deck_pages.noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}">
 
-                    <span class="deck-color" style="--bgcolor: {{deck.deck_color}};"></span>
-                    <span class="deck-title">{{deck.deck_title}}</span>
+                    <span class="deck-color" style="--bgcolor: {{deck.color}};"></span>
+                    <span class="deck-title">{{deck.title}}</span>
                 </a>
 
                 <button class="deck-action-button"><i class="action-button-icon"></i></button>
@@ -80,7 +80,7 @@
             <div id="deck-header">
 
                 <i id="card-icon" style="--bgcolor: {{color}};"></i>
-                <span id="deck-title">{{page_title}}</span>
+                <span id="deck-title">{{deck_title}}</span>
 
                 <button id="change-view-button">
                     <i class="list-view-icon"></i>
@@ -139,7 +139,11 @@
                 <div class="card">
 
                     <div class="card-image-container">
-                        <img class src="{{card.image_url}}">
+                        {% for image in images %}
+                        {% if image.card_id == card.id %}
+                        <img class src="data:image/{{image.extention}};base64, {{image.data}}">
+                        {% endif %}
+                        {% endfor%}
                     </div>
 
                     <div class="card-header">
