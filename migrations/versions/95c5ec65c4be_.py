@@ -1,8 +1,8 @@
-"""Create Deck, Card, and  Image models
+"""empty message
 
-Revision ID: fa6d3ec03159
+Revision ID: 95c5ec65c4be
 Revises: 
-Create Date: 2022-04-30 13:34:03.709543
+Create Date: 2022-05-01 16:55:37.613859
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fa6d3ec03159'
+revision = '95c5ec65c4be'
 down_revision = None
 branch_labels = None
 depends_on = None

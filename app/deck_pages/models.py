@@ -4,12 +4,14 @@ class Deck(db.Model, CRUDMethods):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False)
     color = db.Column(db.String(7), nullable=False)
+    cards = db.relationship('Card', backref = 'deck', cascade = 'all, delete')
 
 class Card(db.Model, CRUDMethods):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False)
     content = db.Column(db.Text) 
     deck_id = db.Column(db.Integer, db.ForeignKey('deck.id'), nullable=False)
+    image = db.relationship('Image', backref = 'card', cascade = 'all, delete', uselist = False, lazy = True)
 
 class Image(db.Model, CRUDMethods):
     id = db.Column(db.Integer, primary_key=True)

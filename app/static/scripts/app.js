@@ -24,9 +24,11 @@ var cardImage = document.getElementById('preview-image');
 var cardCloseImageButton = document.getElementById('close-image-button');
 var cardTitle = document.getElementById('card-form-header');
 var cardContent = document.getElementById('card-form-content');
+var cardTitleInput = document.getElementById('card-title-input');
 var cardTitleArea = document.getElementsByClassName('card-title editable')[0];
+var cardContentInput = document.getElementById('card-content-input');
 var cardTextArea = document.getElementsByClassName('card-textarea editable')[0];
-var cardActionButton = document.getElementsByClassName('card-action-button'); //5
+var cardActionButton = document.getElementsByClassName('card-action-button');
 var cardActionButtonContainer = document.getElementsByClassName('card-action-buttons-container');
 var boldButton = document.getElementById('bold-button');
 var underlineButton = document.getElementById('underline-button');
@@ -60,13 +62,15 @@ changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
 
 cardTitleArea.addEventListener('input', plainText);
+cardTitleArea.addEventListener('input', updateCardTitleInput);
+cardTextArea.addEventListener('input', updateCardContentInput);
 
 boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus();});
 underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus();});
 italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus();});
 listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus();});
-cardImageInput.addEventListener('change', loadImage);
 
+cardImageInput.addEventListener('change', loadImage);
 cardCloseImageButton.addEventListener('click', closeImage);
 
 deckActionButtons.forEach(function(deckActionButton) {
@@ -133,6 +137,13 @@ for (var index = 0; index < cards.length; index++) {
 regenGridOnElementResize.observe(cardTitle);
 regenGridOnElementResize.observe(cardContent);
 
+function updateCardTitleInput() {
+    cardTitleInput.value = cardTitleArea.innerHTML;
+}
+
+function updateCardContentInput() {
+    cardContentInput.value = cardTextArea.innerHTML;
+}
 
 function ifNoDecks(){
 

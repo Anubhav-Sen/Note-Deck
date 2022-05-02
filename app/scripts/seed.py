@@ -9,7 +9,7 @@ app.app_context().push()
 decks_data = [
     {"deck_title": "CS", "deck_color": "#F3B700"},
     {"deck_title": "Math","deck_color": "#61E8E1"},
-    {"deck_title": "Chemistry","deck_color": "#F25757",}
+    {"deck_title": "Chemistry","deck_color": "#F25757",},
     ]
 
 cards_data = [   
@@ -97,7 +97,6 @@ images_data = [
         "card_id": 9
     },
 ]
-
 
 for deck in decks_data:
     new_deck = Deck(title = deck['deck_title'], color = deck['deck_color'])

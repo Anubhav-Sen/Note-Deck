@@ -24,12 +24,37 @@
 
         <div id="create-deck-form-container">
 
-            <i id="pallet-icon"></i>
-            <input type="color" value="#747474">
-            <input type="text" placeholder="Deck Title">
-            <button><i class="add-button-icon"></i></button>
+            <form id="deck-input-form" method="POST">
 
+                <i id="pallet-icon"></i>
+                
+                {% if update_deck.id %}
+                <input type="hidden" value="{{update_deck.id}}" name="id">
+                {% else %}
+                <input type="hidden" name="id">
+                {% endif %}
+
+                {% if update_deck.color %}
+                <input type="color" value="{{update_deck.color}}" name="color">
+                {% else %}
+                <input type="color" value="#747474" name="color">
+                {% endif %}
+
+                {% if update_deck.title %}
+                <input type="text" value="{{update_deck.title}}" placeholder="Deck Title" maxlength="128" name="title">
+                {% else %}
+                <input type="text" placeholder="Deck Title" maxlength="128" name="title">
+                {% endif %}
+
+                <button form="deck-input-form" name="deck-form"><i class="add-button-icon"></i></button>
+
+            </form>
+                
         </div>
+
+        {% if deck_form_error %}
+        <span id = "deck_form_error">{{deck_form_error}}</span>
+        {% endif %}
 
         <div id="no-decks">
             <i class="deck-icon"></i>
@@ -41,7 +66,7 @@
             {% for deck in decks %}
             <div class="deck">
 
-                <a href="{{url_for('deck_pages.noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}">
+                <a href="{{url_for('deck_pages.get_noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}">
 
                     <span class="deck-color" style="--bgcolor: {{deck.color}};"></span>
                     <span class="deck-title">{{deck.title}}</span>
@@ -50,8 +75,8 @@
                 <button class="deck-action-button"><i class="action-button-icon"></i></button>
 
                 <div class="deck-action-buttons-container">
-                    <button><i class="edit-button-icon"></i>Edit</button>
-                    <button><i class="delete-button-icon"></i>Delete</button>
+                    <a href="{{url_for('deck_pages.updateDeck',  deck_id = deck.id, current_deck_id = current_deck.id)}}"><i class="edit-button-icon"></i>Edit</a>
+                    <a href="{{url_for('deck_pages.deleteDeck',  deck_id = deck.id, current_deck_id = current_deck.id)}}"><i class="delete-button-icon"></i>Delete</a>
                 </div>
 
             </div>
@@ -79,7 +104,7 @@
 
             <div id="deck-header">
 
-                <i id="card-icon" style="--bgcolor: {{color}};"></i>
+                <i id="card-icon" style="--bgcolor: {{deck_color}};"></i>
                 <span id="deck-title">{{deck_title}}</span>
 
                 <button id="change-view-button">
@@ -106,16 +131,24 @@
 
                     </div>
 
+                    <form id="card-input-form" method="POST" enctype="multipart/form-data">
+
+                        <input id="image-input-button" type="file" accept="image/*" name="image" hidden>
+                        <input id="card-title-input" type="text" value="" name="title" hidden>
+                        <input id="card-content-input" type="text" value="" name="content" hidden>
+
+                    </form>
+
                     <div id="card-form-header">
 
-                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable></div>
+                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable>{{test}}
+                        </div>
 
                     </div>
 
                     <div id="card-form-content">
 
-                        <div class="card-textarea editable" role="textbox" data-placeholder="Write a text-card"
-                            contenteditable></div>
+                        <div class="card-textarea editable" role="textbox" data-placeholder="Write a text-card" contenteditable></div>
 
                     </div>
 
@@ -125,25 +158,22 @@
                         <button id="italic-button"><i class="italic-button-icon"></i></button>
                         <button id="list-button"><i class="list-button-icon"></i></button>
                         <label for="image-input-button"><i class="image-button-icon"></i></label>
-                        <input id="image-input-button" type="file" accept="image/*">
                     </div>
 
                     <div class="card-form-actions-container">
                         <button id="close-card-form-button">Close</button>
-                        <button id="save-data-card-form-button">Save</button>
+                        <button id="save-data-card-form-button" name="card-form" form="card-input-form">Save</button>
                     </div>
 
                 </div>
-                
+
                 {% for card in cards %}
                 <div class="card">
 
                     <div class="card-image-container">
-                        {% for image in images %}
-                        {% if image.card_id == card.id %}
-                        <img class src="data:image/{{image.extention}};base64, {{image.data}}">
+                        {% if card.image %}
+                        <img class src="data:image/{{card.image.extention}};base64, {{card.image.data}}">
                         {% endif %}
-                        {% endfor%}
                     </div>
 
                     <div class="card-header">
@@ -161,8 +191,9 @@
 
                     <div class="card-content">
 
+                        {% if card.content %}
                         <div class="card-textarea">{{card.content | safe}}</div>
-
+                        {% endif %}
                     </div>
 
                 </div>
