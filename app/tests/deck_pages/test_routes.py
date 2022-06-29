@@ -27,6 +27,8 @@ def test_note_deck_success(client):
         assert Deck.query.filter_by(id = 2).first().title is 'testdeck2'
         assert Deck.query.filter_by(id = 2).first().color is '#000000'
 
+
+
 def test_get_started_success(client):
     response = client.get('/get-started')
     assert response.status_code == 200 or 404

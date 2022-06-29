@@ -31,8 +31,6 @@
     margin-bottom: 8px;
 }
 
-
-
 #deck {
     width: 100%;
     display: flex;
@@ -40,7 +38,7 @@
     align-items: stretch;
 }
 
-#deck-header {
+#deck-header, #search-header {
     margin: 40px;
     height: 32px;
     display: flex;
@@ -57,10 +55,26 @@
     flex-shrink: 0;
 }
 
+#card-icon-small {
+    height: 16px;
+    width: 10px;
+    border-radius: 2px;
+    background-color: var(--bgcolor);
+    flex-shrink: 0;
+}
+
 #deck-title {
     color: #646464;
     font-weight: bold;
     font-size: 48px;
+    flex-shrink: 0;
+    margin: 0 auto 0 8px;
+}
+
+#search-title {
+    color: #646464;
+    font-weight: bold;
+    font-size: 32px;
     flex-shrink: 0;
     margin: 0 auto 0 8px;
 }
@@ -125,7 +139,29 @@
     gap: 8px;
 }
 
-#no-cards span{
+#no-cards span {
+    all: inherit;
+    flex-direction: row;
+    gap: 8px;
+    width: auto;
+    height: auto;
+}
+
+#no-results {
+    height: calc(100vh - 304px);
+    margin: 0 16px 0 16px;
+    text-align: center;
+    font-weight: bold;
+    color: #a6a6a6;
+    display: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#no-results span {
     all: inherit;
     flex-direction: row;
     gap: 8px;
@@ -200,7 +236,27 @@
 .card-title {
     font-size: 24px;
     font-weight: bold;
+    word-break: break-all;
     color: #747474;
+}
+
+.card-title a {
+    all: inherit;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title a:hover {
+    color: #999999;
+}
+
+.card-title span {
+    font-size: 16px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .card-action-button {
@@ -230,7 +286,7 @@
     right: 4px;
 }
 
-.card-action-buttons-container button{
+.card-action-buttons-container a{
     all: unset;
     padding: 8px 16px 8px 16px;
     font-size: 16px;
@@ -241,7 +297,7 @@
     gap: 8px;
 }
 
-.card-action-buttons-container button:hover {
+.card-action-buttons-container a:hover {
     background-color: #F2F2F2;
 }
 
@@ -253,6 +309,7 @@
 
 .card-textarea {
     margin-top: 24px;
+    word-wrap: break-word;
 }
 
 .card-textarea ul {
@@ -272,7 +329,7 @@
 }
 
 #card-form {
-    display: none;
+    display: var(--display);
 }
 
 #card-form-header, #card-form-content {

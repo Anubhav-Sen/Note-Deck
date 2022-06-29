@@ -6,6 +6,7 @@ var decks = document.getElementById('decks');
 var deckActionButtons = document.querySelectorAll('.deck-action-button');
 var noDecksMessage = document.getElementById('no-decks');
 var noCardsMessage = document.getElementById('no-cards');
+var noResultsMessage = document.getElementById('no-results');
 var cardCanvas = document.getElementById('card-canvas');
 var deck = document.getElementById('deck');
 var changeViewButton = document.getElementById('change-view-button');
@@ -41,6 +42,7 @@ window.addEventListener('load', checkColumnCount);
 window.addEventListener('load', generateGrid);
 window.addEventListener('load', ifNoDecks);
 window.addEventListener('load', ifNoCards);
+window.addEventListener('load', ifNoResults);
 
 window.addEventListener('resize', checkWindowWidth);
 window.addEventListener('resize', checkColumnCount);
@@ -49,29 +51,11 @@ window.addEventListener('resize', generateGrid);
 menuButton.addEventListener('click', toggleDeckNavigation);
 menuButton.addEventListener('click', generateGrid);
 
-addCardButton.addEventListener('click', openCardForm);
-addCardButton.addEventListener('click', generateGrid);
-
-closeCardFormButton.addEventListener('click', closeCardForm);
-closeCardFormButton.addEventListener('click', generateGrid);
-
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
 
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
-
-cardTitleArea.addEventListener('input', plainText);
-cardTitleArea.addEventListener('input', updateCardTitleInput);
-cardTextArea.addEventListener('input', updateCardContentInput);
-
-boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus();});
-underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus();});
-italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus();});
-listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus();});
-
-cardImageInput.addEventListener('change', loadImage);
-cardCloseImageButton.addEventListener('click', closeImage);
 
 deckActionButtons.forEach(function(deckActionButton) {
 
@@ -134,6 +118,24 @@ for (var index = 0; index < cards.length; index++) {
     regenGridOnElementResize.observe(cardImageContainer[index]);
 }
 
+addCardButton.addEventListener('click', openCardForm);
+addCardButton.addEventListener('click', generateGrid);
+
+closeCardFormButton.addEventListener('click', closeCardForm);
+closeCardFormButton.addEventListener('click', generateGrid);
+
+cardTitleArea.addEventListener('input', plainText);
+cardTitleArea.addEventListener('input', updateCardTitleInput);
+cardTextArea.addEventListener('input', updateCardContentInput);
+
+boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus();});
+underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus();});
+italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus();});
+listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus();});
+
+cardImageInput.addEventListener('change', loadImage);
+cardCloseImageButton.addEventListener('click', closeImage);
+
 regenGridOnElementResize.observe(cardTitle);
 regenGridOnElementResize.observe(cardContent);
 
@@ -161,6 +163,13 @@ function ifNoCards(){
     }
 }
 
+function ifNoResults(){
+
+    if (grid.childElementCount === 0) {
+        noResultsMessage.style.display = "flex";
+    }
+}
+
 function checkWindowWidth() {
 
     if (window.innerWidth < 872) {
@@ -172,7 +181,10 @@ function checkWindowWidth() {
         deckNav.style.marginTop = "65px";
         backgroundOverlay.style.display = "none";
         cardCanvas.style.width = "100vw";
-        addCardButton.style.left = "32px";
+        
+        if (addCardButton) {      
+            addCardButton.style.left = "32px";
+        }
 
     } else if (window.innerWidth > 872) {
 
@@ -182,13 +194,18 @@ function checkWindowWidth() {
         deckNav.style.position = "static";
         deckNav.style.marginTop = "0";
         cardCanvas.style.width = "calc(100vw - 272px)";
-        addCardButton.style.left = "304px";
-
+        
+        if (addCardButton) {      
+            addCardButton.style.left = "304px";
+        }
     }
 
     if (window.innerWidth < 400) {
 
-        addCardButton.style.left = "16px";
+        
+        if (addCardButton) {      
+            addCardButton.style.left = "16px";
+        }
     }
 
     if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "flex") && (window.innerWidth < 968)) {
@@ -232,7 +249,10 @@ function toggleDeckNavigation() {
         deckNav.style.display = "none";
         backgroundOverlay.style.display = "none";
         cardCanvas.style.width = "100vw";
-        addCardButton.style.left = "32px";
+        
+        if (addCardButton) {      
+            addCardButton.style.left = "32px";
+        }
 
     } else if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "none") && (window.innerWidth < 872)) {
 
@@ -245,15 +265,18 @@ function toggleDeckNavigation() {
 
         deckNav.style.display = "flex";
         cardCanvas.style.width = "calc(100vw - 272px)";
-        addCardButton.style.left = "304px";
+
+        if (addCardButton) {      
+            addCardButton.style.left = "304px";
+        }
 
     }
 
-    if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "flex") && (window.innerWidth < 968)) {
+    if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "flex") && (window.innerWidth < 968) && (window.innerWidth > 872)) {
 
         changeViewButton.style.display = "none";
 
-    } else if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "none") && (window.innerWidth < 968)) {
+    } else if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "none") && (window.innerWidth < 968) && (window.innerWidth > 872)) {
 
         changeViewButton.style.display = "flex";
 

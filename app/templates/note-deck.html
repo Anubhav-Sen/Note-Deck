@@ -12,8 +12,14 @@
         <span class="Note-Deck-Logo"></span>
 
         <div id="search-container">
-            <input type="text" placeholder="Quick Search">
-            <button><i id="search-button-icon"></i></button>
+
+            <form id="search-form" method="POST">     
+
+                <input type="text" value="{{search_term}}" placeholder="Quick Search" name="search-term">
+                <button form="search-form" name="search-form"><i id="search-button-icon"></i></button>
+            
+            </form>
+
         </div>
 
         <button id="profile-menu-button">{{username[0]}}</button>
@@ -27,7 +33,7 @@
             <form id="deck-input-form" method="POST">
 
                 <i id="pallet-icon"></i>
-                
+
                 {% if update_deck.id %}
                 <input type="hidden" value="{{update_deck.id}}" name="id">
                 {% else %}
@@ -88,6 +94,7 @@
 
     <div id="overlay-background"></div>
 
+    {% block main %}
     <main id="card-canvas">
 
         <div id="no-deck">
@@ -121,34 +128,62 @@
 
             <div id="cards-container">
 
-                <div class="card" id="card-form">
+                <div class="card" id="card-form" style="--display: {{card_form_state}}">
 
                     <div class="card-image-container">
 
+                        {% if update_card_image.data %}
+                        <button id="close-image-button" style="display: block;"><i class="close-button-icon"></i></button>
+                        <img id="preview-image" src="data:image/{{update_card_image.extention}};base64, {{update_card_image.data}}">
+                        {% else %}
                         <button id="close-image-button"><i class="close-button-icon"></i></button>
-
                         <img id="preview-image" src="">
+                        {% endif %}
 
                     </div>
 
                     <form id="card-input-form" method="POST" enctype="multipart/form-data">
 
+                        
+                        {% if update_card.id %}
+                        <input type="hidden" value="{{update_card.id}}" name="id">
+                        {% else %}
+                        <input type="hidden" name="id">
+                        {% endif %}
+                        
                         <input id="image-input-button" type="file" accept="image/*" name="image" hidden>
-                        <input id="card-title-input" type="text" value="" name="title" hidden>
+
+                        {% if update_card.title %}
+                        <input id="card-title-input" type="text" value="{{update_card.title}}" name="title" hidden>
+                        {% else %}
+                        <input id="card-title-input" type="text" name="title" hidden>
+                        {% endif %}
+
+                        {% if update_card.content %}
+                        <input id="card-content-input" type="text" value="{{update_card.content}}" name="content" hidden>
+                        {% else %}
                         <input id="card-content-input" type="text" value="" name="content" hidden>
+                        {% endif %}
 
                     </form>
 
                     <div id="card-form-header">
 
-                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable>{{test}}
-                        </div>
-
+                        {% if update_card.title %}
+                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable>{{update_card.title}}</div>
+                        {% else %}
+                        <div class="card-title editable" role="text" data-placeholder="Title" contenteditable></div>
+                        {% endif %}
+                        
                     </div>
 
                     <div id="card-form-content">
 
+                        {% if update_card.content %}
+                        <div class="card-textarea editable" role="textbox" data-placeholder="Write a text-card" contenteditable>{{update_card.content | safe}}</div>
+                        {% else %}
                         <div class="card-textarea editable" role="textbox" data-placeholder="Write a text-card" contenteditable></div>
+                        {% endif %}
 
                     </div>
 
@@ -168,10 +203,10 @@
                 </div>
 
                 {% for card in cards %}
-                <div class="card">
+                <div id="{{card.id}}" class="card">
 
                     <div class="card-image-container">
-                        {% if card.image %}
+                        {% if card.image.data %}
                         <img class src="data:image/{{card.image.extention}};base64, {{card.image.data}}">
                         {% endif %}
                     </div>
@@ -183,8 +218,8 @@
                         <button class="card-action-button"><i class="action-button-icon"></i></button>
 
                         <div class="card-action-buttons-container">
-                            <button><i class="edit-button-icon"></i>Edit</button>
-                            <button><i class="delete-button-icon"></i>Delete</button>
+                            <a href="{{url_for('deck_pages.updateCard', card_id = card.id, current_deck_id = current_deck.id)}}"><i class="edit-button-icon"></i>Edit</a>
+                            <a href="{{url_for('deck_pages.deleteCard', card_id = card.id, current_deck_id = current_deck.id)}}"><i class="delete-button-icon"></i>Delete</a>
                         </div>
 
                     </div>
@@ -206,6 +241,7 @@
         </div>
 
     </main>
+    {% endblock %}
 
 </div>
 {% endblock %}
