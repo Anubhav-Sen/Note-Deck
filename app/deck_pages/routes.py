@@ -1,36 +1,40 @@
-from encodings import utf_8
-from flask import Blueprint, render_template, redirect, request, url_for, abort, jsonify
-from jmespath import search
+from flask import Blueprint, render_template, redirect, request, url_for, abort
 from .models import Deck, Card, Image
 from app.extensions.database import db
 import logging
 import base64
-from sqlalchemy import and_, or_, not_
-
-username = 'Dwight'
+from sqlalchemy import and_, or_
+from flask_login import login_required, current_user
 
 blueprint = Blueprint('deck_pages', __name__)
 
 @blueprint.route('/')
 def index():
 
-    deck_count = Deck.query.count()
-    first_deck = Deck.query.first()
+    if current_user.is_authenticated:
 
-    if deck_count == 0:
-        return redirect(url_for('deck_pages.get_getStarted'))
+        deck_count = Deck.query.filter_by(user_id = current_user.id).count()
+        first_deck = Deck.query.filter_by(user_id = current_user.id).first()
+        
+        if deck_count == 0:
+            return redirect(url_for('deck_pages.get_getStarted'))
+            
+        elif deck_count > 0:
+            return redirect(url_for('deck_pages.get_noteDeck',  
+            deck_id=first_deck.id, 
+            deck_title=first_deck.title, 
+            deck_color=first_deck.color))
 
-    elif deck_count > 0:
-        return redirect(url_for('deck_pages.get_noteDeck',  
-        deck_id=first_deck.id, 
-        deck_title=first_deck.title, 
-        deck_color=first_deck.color))
+    else:
+
+        return redirect(url_for('users.get_login'))
 
 @blueprint.get('/decks/<int:deck_id>/<deck_title>/<deck_color>')
+@login_required
 def get_noteDeck(deck_id, deck_title, deck_color):
 
-    decks = Deck.query.all()
-    deck_count = Deck.query.count()
+    decks = Deck.query.filter_by(user_id = current_user.id).all()
+    deck_count = Deck.query.filter_by(user_id = current_user.id).count()
     current_deck = Deck.query.filter_by(id=deck_id).first()
     cards = Card.query.filter_by(deck_id=deck_id)
     deck_form_error = request.args.get('deck_form_error')
@@ -54,10 +58,13 @@ def get_noteDeck(deck_id, deck_title, deck_color):
         logging.warning(f"Url dosen't exist!")
         return abort(404)
 
-    elif len(decks) > 0:
+    elif current_deck.user_id != current_user.id:
+        logging.warning("Tried to access another users deck.")
+        return abort(401)
 
-        return render_template('note-deck.html', 
-        username=username, 
+    elif len(decks) > 0 and current_deck.user_id == current_user.id:
+
+        return render_template('note-deck.html',  
         decks=decks, 
         deck_id=deck_id, 
         deck_title=deck_title, 
@@ -71,6 +78,7 @@ def get_noteDeck(deck_id, deck_title, deck_color):
         card_form_state = card_form_state)
 
 @blueprint.post('/decks/<int:deck_id>/<deck_title>/<deck_color>')
+@login_required
 def post_noteDeck(deck_id, deck_title, deck_color):
 
     current_deck = Deck.query.filter_by(id=deck_id).first()
@@ -83,7 +91,7 @@ def post_noteDeck(deck_id, deck_title, deck_color):
         update_deck_id = request.args.get('update_deck_id')
                 
         if deck_title_data != None and deck_color_data != None and deck_id_data == None:
-            new_deck = Deck(title=deck_title_data, color=deck_color_data)
+            new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
             new_deck.save()
 
             return redirect(url_for('deck_pages.get_noteDeck',  
@@ -121,7 +129,13 @@ def post_noteDeck(deck_id, deck_title, deck_color):
         update_card_id = request.args.get('update_card_id')
         update_card_image_id = request.args.get('update_card_image_id')
 
-        if card_title_data != None and card_id_data == None:
+        if card_title_data == None and card_image_data.filename == "" and card_content_data == None:
+            return redirect(url_for('deck_pages.get_noteDeck',  
+            deck_id=deck_id, 
+            deck_title=deck_title, 
+            deck_color=deck_color))
+    
+        elif card_id_data == None:
             new_card = Card(title=card_title_data, content=card_content_data, deck_id=current_deck.id)
             new_card.save()
 
@@ -135,8 +149,7 @@ def post_noteDeck(deck_id, deck_title, deck_color):
             deck_title=deck_title, 
             deck_color=deck_color))
 
-        
-        elif card_title_data != None and card_id_data != None:
+        elif card_id_data != None:
             update_card = Card.query.filter_by(id = update_card_id).first()
             update_image = Image.query.filter_by(id = update_card_image_id).first()
             
@@ -154,12 +167,6 @@ def post_noteDeck(deck_id, deck_title, deck_color):
             deck_title=deck_title, 
             deck_color=deck_color))
 
-        elif card_title_data == None:
-            return redirect(url_for('deck_pages.get_noteDeck',  
-            deck_id=deck_id, 
-            deck_title=deck_title, 
-            deck_color=deck_color))
-    
     elif 'search-form' in request.form:
         search_term = request.form['search-term'] or None
 
@@ -173,10 +180,11 @@ def post_noteDeck(deck_id, deck_title, deck_color):
             deck_color=deck_color))
 
 @blueprint.route('/delete-deck/<int:deck_id>/<int:current_deck_id>')
+@login_required
 def deleteDeck(deck_id, current_deck_id):
 
-    deck_count = Deck.query.count()
-    first_deck = Deck.query.first()
+    deck_count = Deck.query.filter_by(user_id = current_user.id).count()
+    first_deck = Deck.query.filter_by(user_id = current_user.id).first()
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
     deck = Deck.query.filter_by(id=deck_id).first()
 
@@ -185,7 +193,13 @@ def deleteDeck(deck_id, current_deck_id):
         return abort(400)
 
     elif deck != None:
-        deck.delete()
+        
+        if deck.user_id == current_user.id:
+            deck.delete()
+
+        else:
+            logging.warning("Tried to delete another users deck.")
+            return abort(401)
 
     if request.referrer == url_for('deck_pages.get_noteDeck', deck_id=deck.id, deck_title=deck.title, deck_color=deck.color) and deck_count > 0:
         return redirect(url_for('deck_pages.get_noteDeck',  
@@ -202,9 +216,15 @@ def deleteDeck(deck_id, current_deck_id):
         deck_color=current_deck.color))
 
 @blueprint.route('/delete-card/<int:card_id>/<int:current_deck_id>')
+@login_required
 def deleteCard(card_id, current_deck_id):
     
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
+    deck_ids = []
+    
+    for deck_id in db.session.query(Deck.id).filter(Deck.user_id == current_user.id).all():
+        deck_ids.append(deck_id[0])
+
     card = Card.query.filter_by(id=card_id).first()
  
     if card == None:
@@ -212,7 +232,13 @@ def deleteCard(card_id, current_deck_id):
         return abort(400)
 
     elif card != None:
-        card.delete()
+
+        if card.deck_id in deck_ids:
+            card.delete()
+
+        else:
+            logging.warning("Tried to delete another users card.")
+            return abort(401)
 
     return redirect(url_for('deck_pages.get_noteDeck',  
         deck_id=current_deck.id, 
@@ -220,6 +246,7 @@ def deleteCard(card_id, current_deck_id):
         deck_color=current_deck.color))
 
 @blueprint.route('/update-deck/<int:deck_id>/<int:current_deck_id>')
+@login_required
 def updateDeck(deck_id, current_deck_id):
 
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
@@ -229,6 +256,10 @@ def updateDeck(deck_id, current_deck_id):
         logging.warning("Tried to update non existent deck.")
         return abort(400)
     
+    elif update_deck.user_id != current_user.id:
+        logging.warning("Tried to update another users deck.")
+        return abort(401)
+    
     return redirect(url_for('deck_pages.get_noteDeck',  
     deck_id=current_deck.id, 
     deck_title=current_deck.title,
@@ -236,15 +267,25 @@ def updateDeck(deck_id, current_deck_id):
     update_deck_id = update_deck.id))
 
 @blueprint.route('/update-card/<int:card_id>/<int:current_deck_id>')
+@login_required
 def updateCard(card_id, current_deck_id):
     
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
+    deck_ids = []
+    
+    for deck_id in db.session.query(Deck.id).filter(Deck.user_id == current_user.id).all():
+        deck_ids.append(deck_id[0])
+    
     update_card = Card.query.filter_by(id=card_id).first()
     update_card_image = Image.query.filter_by(card_id = card_id).first()
 
     if update_card == None:
         logging.warning("Tried to update non existent card.")
         return abort(400)
+
+    elif update_card.deck_id not in deck_ids:
+        logging.warning("Tried to update another users card.")
+        return abort(401)
 
     if update_card_image:
         return redirect(url_for('deck_pages.get_noteDeck',  
@@ -265,10 +306,16 @@ def updateCard(card_id, current_deck_id):
 
 
 @blueprint.get('/search/<int:current_deck_id>/<search_term>')
+@login_required
 def get_search(current_deck_id, search_term):
 
-    decks = Deck.query.all()
-    cards = Card.query.filter(or_(Card.title.like(f"%{search_term}%"), Card.content.like(f"%{search_term}%"))).all()
+    decks = Deck.query.filter_by(user_id = current_user.id).all()
+    deck_ids = []
+    
+    for deck_id in db.session.query(Deck.id).filter(Deck.user_id == current_user.id).all():
+        deck_ids.append(deck_id[0])
+    
+    cards = Card.query.filter(and_((Card.deck_id.in_(deck_ids)), (or_(Card.title.like(f"%{search_term}%"), Card.content.like(f"%{search_term}%"))))).all()
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
     deck_form_error = request.args.get('deck_form_error')
     update_deck_id = request.args.get('update_deck_id')
@@ -277,9 +324,12 @@ def get_search(current_deck_id, search_term):
     update_card = Card.query.filter_by(id = update_card_id).first()
     update_card_image_id = request.args.get('update_card_image_id')
     update_card_image = Image.query.filter_by(id = update_card_image_id).first()
+
+    if current_deck.user_id != current_user.id:
+        logging.warning("User another users deck id.")
+        return abort(401)
  
-    return render_template('note-deck-search.html', 
-        username=username, 
+    return render_template('note-deck-search.html',  
         decks=decks, 
         deck_id='#', 
         search_term = search_term,
@@ -295,6 +345,7 @@ def get_search(current_deck_id, search_term):
 
 
 @blueprint.post('/search/<int:current_deck_id>/<search_term>')
+@login_required
 def post_search(current_deck_id, search_term):
 
     current_deck = Deck.query.filter_by(id=current_deck_id).first()
@@ -307,7 +358,7 @@ def post_search(current_deck_id, search_term):
         update_deck_id = request.args.get('update_deck_id')
                 
         if deck_title_data != None and deck_color_data != None and deck_id_data == None:
-            new_deck = Deck(title=deck_title_data, color=deck_color_data)
+            new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
             new_deck.save()
 
             return redirect(url_for('deck_pages.get_noteDeck',  
@@ -317,7 +368,7 @@ def post_search(current_deck_id, search_term):
                 
         elif deck_title_data != None and deck_color_data != None and deck_id_data != None:
             update_deck = Deck.query.filter_by(id = update_deck_id).first()
-            
+
             update_deck.title = request.form['title']
             update_deck.color = request.form['color']
             update_deck.save()
@@ -349,15 +400,15 @@ def post_search(current_deck_id, search_term):
             deck_color=current_deck.color))
 
 @blueprint.get('/get-started')
+@login_required
 def get_getStarted():
 
-    deck_count = Deck.query.count()
+    deck_count = Deck.query.filter_by(user_id = current_user.id).count()
 
     deck_form_error = request.args.get('deck_form_error')
 
     if deck_count == 0:
         return render_template('note-deck.html', 
-        username=username, 
         decks='', 
         deck_id='#', 
         deck_title='Get-Started', 
@@ -372,6 +423,7 @@ def get_getStarted():
         return abort(404)
 
 @blueprint.post('/get-started')
+@login_required
 def post_getStarted():
 
     deck_id_data = request.form['id'] or None
@@ -379,7 +431,7 @@ def post_getStarted():
     deck_color_data = request.form['color'] or None
     
     if deck_title_data != None and deck_color_data != None and deck_id_data == None:
-        new_deck = Deck(title=deck_title_data, color=deck_color_data)
+        new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
         new_deck.save()
 
         return redirect(url_for('deck_pages.get_noteDeck',  

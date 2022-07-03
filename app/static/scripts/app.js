@@ -1,4 +1,6 @@
 var menuButton = document.getElementById('menu-button');
+var profileMenuButton = document.getElementById('profile-menu-button');
+var profileMenu = document.getElementById('profile-menu');
 var gridContainer = document.getElementById('grid-container');
 var backgroundOverlay = document.getElementById('overlay-background');
 var deckNav = document.getElementById('deck-navigation');
@@ -50,6 +52,8 @@ window.addEventListener('resize', generateGrid);
 
 menuButton.addEventListener('click', toggleDeckNavigation);
 menuButton.addEventListener('click', generateGrid);
+
+profileMenuButton.addEventListener('click', toggleProfileMenu);
 
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
@@ -112,6 +116,11 @@ window.addEventListener('click', function(event) {
         }
     
     });
+
+    if (!(event.target === profileMenu) && !(event.target.parentElement === profileMenu) && !(event.target === profileMenuButton) && !(event.target.parentElement === profileMenuButton)) {
+        
+        profileMenu.style.display = "none";
+    }
 })
 
 for (var index = 0; index < cards.length; index++) {
@@ -287,6 +296,19 @@ function toggleDeckNavigation() {
     } else if ((window.getComputedStyle(deckNav).getPropertyValue('display') === "none") && (window.innerWidth > 968)) {
 
         changeViewButton.style.display = "flex";
+
+    }
+}
+
+function toggleProfileMenu() {
+
+    if (window.getComputedStyle(profileMenu).getPropertyValue('display') === "none") {
+
+        profileMenu.style.display = "flex"
+
+    } else if (window.getComputedStyle(profileMenu).getPropertyValue('display') === "flex") {
+        
+        profileMenu.style.display = "none"
 
     }
 }

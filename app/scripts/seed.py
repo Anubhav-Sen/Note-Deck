@@ -7,9 +7,9 @@ app = create_app()
 app.app_context().push()
 
 decks_data = [
-    {"deck_title": "CS", "deck_color": "#F3B700"},
-    {"deck_title": "Math","deck_color": "#61E8E1"},
-    {"deck_title": "Chemistry","deck_color": "#F25757",},
+    {"title": "CS", "color": "#F3B700", "user_id": 1},
+    {"title": "Math","color": "#61E8E1", "user_id": 1},
+    {"title": "Chemistry","color": "#F25757", "user_id": 1},
     ]
 
 cards_data = [   
@@ -99,7 +99,7 @@ images_data = [
 ]
 
 for deck in decks_data:
-    new_deck = Deck(title = deck['deck_title'], color = deck['deck_color'])
+    new_deck = Deck(title = deck['title'], color = deck['color'], user_id = deck['user_id'])
     db.session.add(new_deck)
 
 db.session.flush()

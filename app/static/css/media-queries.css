@@ -1,5 +1,9 @@
 @media only screen and (max-width: 420px) {
 
+    #login-signup-form {
+        border: none;
+    }
+    
     #header {
         padding: 0 16px 0 16px;
     }

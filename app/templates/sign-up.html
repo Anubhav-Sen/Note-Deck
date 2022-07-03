@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Note-Deck | Sign-up {% endblock %}
+
+{% block body %} 
+
+<div id="login-signup-form-container">
+
+    <form id="sign-up-form" method="POST">
+
+        <div id="login-signup-form">
+
+            <span id="Note-Deck-logo" class="Note-Deck-Logo"></span>
+
+            <input type="text" placeholder="Username" name="username" required>
+            <input type="email" placeholder="Email Address" name="email" required>
+            <input type="password" placeholder="Password" name="password" required>
+            <input type="password" placeholder="Confirm Password" name="confirm-password" required>
+            <button form="sign-up-form">Sign-up</button>
+
+            {% if error %}
+            <span id="login-signup-form-error">*{{error}}</span>
+            {% endif %}
+
+            <span>Have an account? <a href="{{url_for('users.get_login')}}">sign-up.</a></span>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -94,6 +94,10 @@
     align-items: center;
 }
 
+#profile-menu-container {
+    position: relative;
+}
+
 #profile-menu-button {
     height: 32px !important;
     width: 32px !important;
@@ -111,3 +115,52 @@
 #profile-menu-button:hover {
     background-color: #828282;
 }
+
+#profile-menu {
+    top: 40px;
+    right: 16px;
+    font-weight: bold;
+    padding: 16px;
+    border: 2px solid #DDDDDD;
+    border-radius: 8px;
+    background-color: white;
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 1;
+}
+
+#profile-menu span:nth-child(3) {
+    color: #64d0ff;
+}
+
+#profile-menu-icon {
+    height: 32px !important;
+    width: 32px !important;
+    border-radius: 16px;
+    background-color: #747474;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-menu a {
+    all: unset;
+    height: 24px;
+    color: #8D8D8D;
+    padding: 0 16px 0 16px;
+    border: 2px solid #DDDDDD;
+    border-radius: 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+#profile-menu a:hover {
+    background-color: #DDDDDD;
+}   

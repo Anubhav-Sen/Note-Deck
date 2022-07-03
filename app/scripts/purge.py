@@ -1,9 +1,15 @@
 from app.app import create_app
 from app.deck_pages.models import Deck, Card, Image
+from app.users.models import User
 from app.extensions.database import db
 
 app = create_app()
 app.app_context().push()
+
+
+User.query.delete()
+
+db.session.flush()
 
 Deck.query.delete()
 

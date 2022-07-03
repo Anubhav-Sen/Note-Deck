@@ -5,10 +5,11 @@ class Deck(db.Model, CRUDMethods):
     title = db.Column(db.String(128), nullable=False)
     color = db.Column(db.String(7), nullable=False)
     cards = db.relationship('Card', backref = 'deck', cascade = 'all, delete')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Card(db.Model, CRUDMethods):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128), nullable=False)
+    title = db.Column(db.String(128))
     content = db.Column(db.Text) 
     deck_id = db.Column(db.Integer, db.ForeignKey('deck.id'), nullable=False)
     image = db.relationship('Image', backref = 'card', cascade = 'all, delete', uselist = False, lazy = True)

@@ -22,7 +22,20 @@
 
         </div>
 
-        <button id="profile-menu-button">{{username[0]}}</button>
+        <div id="profile-menu-container">
+            
+            <button id="profile-menu-button">{{current_user.username[0]}}</button>
+
+            <div id="profile-menu">
+
+                <span id="profile-menu-icon">D</span>
+                <span>{{current_user.username}}</span>
+                <span>{{current_user.email}}</span>
+                <a href="{{url_for('users.logout')}}">Sign-out</a>
+
+            </div>
+
+        </div>
 
     </div>
 
