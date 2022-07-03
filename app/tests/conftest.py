@@ -3,7 +3,6 @@ from flask_migrate import upgrade
 import pytest
 from app.app import create_app
 
-
 @pytest.fixture
 def client():
   environ['DATABASE_URL'] = 'sqlite://'

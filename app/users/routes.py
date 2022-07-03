@@ -1,9 +1,7 @@
-from click import password_option
 from flask import Blueprint, render_template, request, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user
-
 
 blueprint = Blueprint('users', __name__)
 
