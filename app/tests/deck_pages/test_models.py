@@ -2,7 +2,7 @@ from app.extensions.database import db
 from app.deck_pages.models import Deck, Card, Image
 
 def test_deck_update(client):
-  deck = Deck(title = 'test', color = '#adadad')
+  deck = Deck(title = 'test', color = '#adadad', user_id = 0)
   db.session.add(deck)
   db.session.commit()
 
@@ -36,7 +36,7 @@ def test_image_update(client):
 
 
 def test_deck_delete(client):
-  deck = Deck(title = 'test', color = '#adadad')
+  deck = Deck(title = 'test', color = '#adadad', user_id = 0)
   db.session.add(deck)
   db.session.commit()
 

@@ -25,7 +25,7 @@
     margin-bottom: 16px;
     color: #747474;
     font-size: 16px;
-    font-family: consolas, 'Segoe UI', sans-serif;
+    font-family: consolas, 'IBM Plex Mono', 'Segoe UI', sans-serif;
     font-weight: bold;
 }
 
@@ -52,7 +52,7 @@
     margin-bottom: 16px;
     color: white;
     font-size: 16px;
-    font-family: consolas, 'Segoe UI', sans-serif;
+    font-family: consolas, 'IBM Plex Mono', 'Segoe UI', sans-serif;
     font-weight: bold;
     cursor: pointer;
 }

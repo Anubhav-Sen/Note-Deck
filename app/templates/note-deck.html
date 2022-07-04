@@ -88,7 +88,7 @@
                 <a href="{{url_for('deck_pages.get_noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}">
 
                     <span class="deck-color" style="--bgcolor: {{deck.color}};"></span>
-                    <span class="deck-title">{{deck.title}}</span>
+                    <div class="deck-title">{{deck.title}}</div>
                 </a>
 
                 <button class="deck-action-button"><i class="action-button-icon"></i></button>

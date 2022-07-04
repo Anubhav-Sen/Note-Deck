@@ -16,6 +16,17 @@
         margin-left: 8px;
     }
 
+    #deck-title {
+        font-size: 32px;
+    }
+
+    #card-icon {
+        height: 22px;
+        width: 14px;
+        margin-top: 7.5px;
+        border-radius: 2px;
+    }
+
 }
 
 @media only screen and (max-width: 646px) {

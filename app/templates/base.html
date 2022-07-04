@@ -7,7 +7,7 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/Note-Deck-Tab-Logo.svg') }}">
 
@@ -17,7 +17,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/card-canvas.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login-sign-up-forms.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/media-queries.css') }}">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 
     {% endblock %}

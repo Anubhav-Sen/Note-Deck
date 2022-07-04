@@ -40,16 +40,16 @@
 
 #deck-header, #search-header {
     margin: 40px;
-    height: 32px;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: stretch;
 }
 
 #card-icon {
     height: 34px;
     width: 22px;
+    margin-top: 11px;
     border-radius: 4px;
     background-color: var(--bgcolor);
     flex-shrink: 0;
@@ -67,8 +67,8 @@
     color: #646464;
     font-weight: bold;
     font-size: 48px;
-    flex-shrink: 0;
     margin: 0 auto 0 8px;
+
 }
 
 #search-title {
@@ -76,7 +76,7 @@
     font-weight: bold;
     font-size: 32px;
     flex-shrink: 0;
-    margin: 0 auto 0 8px;
+    margin: 0 auto 0 0;
 }
 
 #change-view-button {
@@ -85,6 +85,7 @@
     font-weight: bold;
     font-size: 16px;
     font-family: consolas, 'Segoe UI', sans-serif;
+    margin-top: 12px;
     margin-left: auto;
     padding: 0 16px 0 16px;
     border: none;
@@ -109,7 +110,7 @@
     width: 64px !important;
     border-radius: 32px;
     position: absolute;
-    top: calc(100vh - 96px);
+    bottom: 32px;
     left: 32px;
     background-color: #F2F2F2;
 }
@@ -284,6 +285,7 @@
     flex-direction: column;
     top: 38px;
     right: 4px;
+    z-index: 1;
 }
 
 .card-action-buttons-container a{

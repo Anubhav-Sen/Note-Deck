@@ -4,6 +4,7 @@ var profileMenu = document.getElementById('profile-menu');
 var gridContainer = document.getElementById('grid-container');
 var backgroundOverlay = document.getElementById('overlay-background');
 var deckNav = document.getElementById('deck-navigation');
+var deckTitleInput = document.querySelector('#deck-input-form input[type=text]')
 var decks = document.getElementById('decks');
 var deckActionButtons = document.querySelectorAll('.deck-action-button');
 var noDecksMessage = document.getElementById('no-decks');
@@ -38,6 +39,11 @@ var underlineButton = document.getElementById('underline-button');
 var italicButton = document.getElementById('italic-button');
 var listButton = document.getElementById('list-button');
 var regenGridOnElementResize = new ResizeObserver(generateGrid);
+var meta = document.createElement('meta');
+
+meta.name = 'viewport';
+meta.content = 'width=device-width,height='+window.innerHeight+', initial-scale=1.0';
+document.getElementsByTagName('head')[0].appendChild(meta);
 
 window.addEventListener('load', checkWindowWidth);
 window.addEventListener('load', checkColumnCount);
@@ -46,7 +52,12 @@ window.addEventListener('load', ifNoDecks);
 window.addEventListener('load', ifNoCards);
 window.addEventListener('load', ifNoResults);
 
-window.addEventListener('resize', checkWindowWidth);
+window.addEventListener('resize', function () {
+    if (document.querySelector('#deck-input-form input[type=text]') != document.activeElement) {
+        checkWindowWidth()
+    }
+});
+
 window.addEventListener('resize', checkColumnCount);
 window.addEventListener('resize', generateGrid);
 
@@ -60,6 +71,14 @@ changeViewButton.addEventListener('click', generateGrid);
 
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
+
+deckTitleInput.addEventListener('focus', function() {
+    
+    if (window.innerWidth < 872) {
+        console.log('works')
+        deckNav.style.display = "flex";
+    }
+})
 
 deckActionButtons.forEach(function(deckActionButton) {
 
@@ -210,7 +229,6 @@ function checkWindowWidth() {
     }
 
     if (window.innerWidth < 400) {
-
         
         if (addCardButton) {      
             addCardButton.style.left = "16px";
