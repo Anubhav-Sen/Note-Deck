@@ -135,7 +135,7 @@
 }
 
 #no-cards {
-    height: calc(100vh - 304px);
+    height: calc(100vh - 328px);
     margin: 0 16px 0 16px;
     text-align: center;
     font-weight: bold;
@@ -436,14 +436,16 @@
     position: absolute;
     display: none;
     overflow: auto;
-    place-items: center;
+    justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
 #update-deck-form-container {   
+    top: 0;
     height: fit-content;
     display: flex;
+    position: relative;
     margin: 0 16px 0 16px;
     flex-direction: column;
     justify-content: flex-start;

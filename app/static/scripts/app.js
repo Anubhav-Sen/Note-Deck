@@ -4,7 +4,6 @@ var profileMenu = document.getElementById('profile-menu');
 var gridContainer = document.getElementById('grid-container');
 var backgroundOverlay = document.getElementById('overlay-background');
 var deckNav = document.getElementById('deck-navigation');
-var deckTitleInput = document.querySelector('#deck-input-form input[type=text]')
 var decks = document.getElementById('decks');
 var deckActionButtons = document.querySelectorAll('.deck-action-button');
 var updateDeckFormOverlay = document.getElementById('update-deck-form-background');
@@ -58,14 +57,10 @@ window.addEventListener('load', ifNoResults);
 window.addEventListener('load', ifDeckEditing);
 window.addEventListener('load', ifCardEditing);
 
-window.addEventListener('resize', function () {
-    if (document.querySelector('#deck-input-form input[type=text]') != document.activeElement) {
-        checkWindowWidth()
-    }
-});
-
+window.addEventListener('resize', checkWindowWidth);
 window.addEventListener('resize', checkColumnCount);
 window.addEventListener('resize', generateGrid);
+window.addEventListener('resize', displaceUpdateDeckForm)
 
 menuButton.addEventListener('click', toggleDeckNavigation);
 menuButton.addEventListener('click', generateGrid);
@@ -74,13 +69,6 @@ profileMenuButton.addEventListener('click', toggleProfileMenu);
 
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
-
-deckTitleInput.addEventListener('focus', function () {
-
-    if (window.innerWidth < 872) {
-        deckNav.style.display = "flex";
-    }
-})
 
 deckActionButtons.forEach(function (deckActionButton) {
 
@@ -225,12 +213,16 @@ function ifDeckEditing() {
     if (deckIdInput.value.trim() != "") {
         updateDeckFormOverlay.style.display = "grid";
         updateDeckFormTitleInput.setSelectionRange(updateDeckFormTitleInput.value.length, updateDeckFormTitleInput.value.length)
+
+        displaceUpdateDeckForm()
         updateDeckFormTitleInput.focus()
     }
 
     if ((deckIdInput.value.trim() != "") && (updateDeckFormError)) {
         updateDeckFormOverlay.style.display = "grid";
         updateDeckFormTitleInput.value = "";
+
+        displaceUpdateDeckForm()
         updateDeckFormTitleInput.focus()
     }
 
@@ -252,7 +244,7 @@ function ifCardEditing() {
 
 function checkWindowWidth() {
 
-    if (window.innerWidth < 872) {
+    if ((window.innerWidth < 872) && (document.querySelector('#deck-input-form input[type=text]') != document.activeElement)) {
 
         gridContainer.style.gridTemplateAreas = '"header header" "card-canvas card-canvas"';
         deckNav.style.display = "none";
@@ -266,13 +258,29 @@ function checkWindowWidth() {
             addCardButton.style.left = "32px";
         }
 
+    } else if ((window.innerWidth < 872) && (document.querySelector('#deck-input-form input[type=text]') == document.activeElement)) {
+
+        gridContainer.style.gridTemplateAreas = '"header header" "card-canvas card-canvas"';
+        deckNav.style.display = "flex";
+        deckNav.style.gridArea = "none";
+        deckNav.style.position = "absolute";
+        deckNav.style.marginTop = "65px";
+        backgroundOverlay.style.display = "block";
+        backgroundOverlay.style.width = "calc(100vw - 272px)";
+        cardCanvas.style.width = "100vw";
+
+        if (addCardButton) {
+            addCardButton.style.left = "32px";
+        }
+
     } else if (window.innerWidth > 872) {
 
         gridContainer.style.gridTemplateAreas = '"header header" "deck-nav card-canvas"';
         deckNav.style.display = "flex";
         deckNav.style.gridArea = "deck-nav";
         deckNav.style.position = "static";
-        deckNav.style.marginTop = "0";
+        deckNav.style.marginTop = "0";  
+        backgroundOverlay.style.display = "none";
         cardCanvas.style.width = "calc(100vw - 272px)";
 
         if (addCardButton) {
@@ -495,4 +503,10 @@ function closeImage() {
     cardImage.src = "";
     cardImage.style.display = "none";
     cardCloseImageButton.style.display = "none";
+}
+
+function displaceUpdateDeckForm() {
+
+    updateDeckForm.style.top = "" + (((window.innerHeight - 64)/2) - (updateDeckForm.getBoundingClientRect().height/2)) + "px";
+
 }
