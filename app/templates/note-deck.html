@@ -24,11 +24,11 @@
 
         <div id="profile-menu-container">
             
-            <button id="profile-menu-button">{{current_user.username[0]}}</button>
+            <button id="profile-menu-button">{{current_user.username[0].upper()}}</button>
 
             <div id="profile-menu">
 
-                <span id="profile-menu-icon">D</span>
+                <span id="profile-menu-icon">{{current_user.username[0].upper()}}</span>
                 <span>{{current_user.username}}</span>
                 <span>{{current_user.email}}</span>
                 <a href="{{url_for('users.logout')}}">Sign-out</a>
@@ -47,23 +47,8 @@
 
                 <i id="pallet-icon"></i>
 
-                {% if update_deck.id %}
-                <input type="hidden" value="{{update_deck.id}}" name="id">
-                {% else %}
-                <input type="hidden" name="id">
-                {% endif %}
-
-                {% if update_deck.color %}
-                <input type="color" value="{{update_deck.color}}" name="color">
-                {% else %}
                 <input type="color" value="#747474" name="color">
-                {% endif %}
-
-                {% if update_deck.title %}
-                <input type="text" value="{{update_deck.title}}" placeholder="Deck Title" maxlength="128" name="title">
-                {% else %}
                 <input type="text" placeholder="Deck Title" maxlength="128" name="title">
-                {% endif %}
 
                 <button form="deck-input-form" name="deck-form"><i class="add-button-icon"></i></button>
 
@@ -72,7 +57,7 @@
         </div>
 
         {% if deck_form_error %}
-        <span id = "deck_form_error">{{deck_form_error}}</span>
+        <span id = "deck-form-error">{{deck_form_error}}</span>
         {% endif %}
 
         <div id="no-decks">
@@ -104,6 +89,33 @@
         </div>
 
     </nav>
+
+    <div id="update-deck-form-background">
+
+        <div id="update-deck-form-container">
+
+            <form id="update-deck-form" method="POST">
+
+                <i id="pallet-icon"></i>
+
+                <input id="deck-id" type="hidden" value="{{update_deck.id}}" name="id">
+                <input type="text" value="{{update_deck.title}}" placeholder="Title" maxlength="128" name="title">
+                <input type="color" value="{{update_deck.color}}" name="color">
+
+            </form>
+  
+            {% if update_deck_form_error %}
+            <span id = "update-deck-form-error">{{update_deck_form_error}}</span>
+            {% endif %}
+
+            <div id="update-deck-form-actions">  
+                <button id="update-deck-form-close-button">Close</button>     
+                <button form="update-deck-form" name="update-deck-form">Save</button>
+            </div>
+
+        </div>
+
+    </div>
 
     <div id="overlay-background"></div>
 
@@ -141,7 +153,7 @@
 
             <div id="cards-container">
 
-                <div class="card" id="card-form" style="--display: {{card_form_state}}">
+                <div class="card" id="card-form">
 
                     <div class="card-image-container">
 
@@ -159,9 +171,9 @@
 
                         
                         {% if update_card.id %}
-                        <input type="hidden" value="{{update_card.id}}" name="id">
+                        <input id="card-id" type="hidden" value="{{update_card.id}}" name="id">
                         {% else %}
-                        <input type="hidden" name="id">
+                        <input id="card-id" type="hidden" name="id">
                         {% endif %}
                         
                         <input id="image-input-button" type="file" accept="image/*" name="image" hidden>
@@ -200,7 +212,7 @@
 
                     </div>
 
-                    <div class="rich-text-buttons-container">
+                    <div id="rich-text-buttons-container">
                         <button id="bold-button"><i class="bold-button-icon"></i></button>
                         <button id="underline-button"><i class="underline-button-icon"></i></button>
                         <button id="italic-button"><i class="italic-button-icon"></i></button>
@@ -208,7 +220,7 @@
                         <label for="image-input-button"><i class="image-button-icon"></i></label>
                     </div>
 
-                    <div class="card-form-actions-container">
+                    <div id="card-form-actions-container">
                         <button id="close-card-form-button">Close</button>
                         <button id="save-data-card-form-button" name="card-form" form="card-input-form">Save</button>
                     </div>
@@ -226,7 +238,7 @@
 
                     <div class="card-header">
 
-                        <div class="card-title">{{card.title}}</div>
+                        <div class="card-title">{{card.title | safe}}</div>
 
                         <button class="card-action-button"><i class="action-button-icon"></i></button>
 

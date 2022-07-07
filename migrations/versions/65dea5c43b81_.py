@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6de00d967f2f
+Revision ID: 65dea5c43b81
 Revises: 
-Create Date: 2022-07-01 15:56:05.044302
+Create Date: 2022-07-07 14:35:04.258006
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6de00d967f2f'
+revision = '65dea5c43b81'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,6 +23,7 @@ def upgrade():
     sa.Column('username', sa.String(length=128), nullable=True),
     sa.Column('email', sa.String(length=128), nullable=True),
     sa.Column('password', sa.String(length=1024), nullable=True),
+    sa.Column('date_created', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
@@ -30,6 +31,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=128), nullable=False),
     sa.Column('color', sa.String(length=7), nullable=False),
+    sa.Column('date_created', sa.DateTime(timezone=True), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -38,6 +40,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=128), nullable=True),
     sa.Column('content', sa.Text(), nullable=True),
+    sa.Column('date_created', sa.DateTime(timezone=True), nullable=False),
     sa.Column('deck_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['deck_id'], ['deck.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -46,6 +49,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('data', sa.String(), nullable=False),
     sa.Column('extention', sa.String(length=10), nullable=False),
+    sa.Column('date_created', sa.DateTime(timezone=True), nullable=False),
     sa.Column('card_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['card_id'], ['card.id'], ),
     sa.PrimaryKeyConstraint('id')

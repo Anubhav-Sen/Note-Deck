@@ -36,15 +36,15 @@ def get_noteDeck(deck_id, deck_title, deck_color):
     decks = Deck.query.filter_by(user_id = current_user.id).all()
     deck_count = Deck.query.filter_by(user_id = current_user.id).count()
     current_deck = Deck.query.filter_by(id=deck_id).first()
-    cards = Card.query.filter_by(deck_id=deck_id)
+    cards = Card.query.filter_by(deck_id=deck_id).order_by(Card.date_created.desc())
     deck_form_error = request.args.get('deck_form_error')
+    update_deck_form_error = request.args.get('update_deck_form_error')
     update_deck_id = request.args.get('update_deck_id')
     update_deck = Deck.query.filter_by(id = update_deck_id).first()
     update_card_id = request.args.get('update_card_id')
     update_card = Card.query.filter_by(id = update_card_id).first()
     update_card_image_id = request.args.get('update_card_image_id')
     update_card_image = Image.query.filter_by(id = update_card_image_id).first()
-    card_form_state = request.args.get('card_form_state')
 
     if current_deck == None:
         logging.warning("Url dosen't exist1")
@@ -71,11 +71,11 @@ def get_noteDeck(deck_id, deck_title, deck_color):
         deck_color=deck_color, 
         cards=cards, 
         deck_form_error=deck_form_error,
+        update_deck_form_error=update_deck_form_error,
         current_deck = current_deck,
         update_deck = update_deck,
         update_card = update_card,
-        update_card_image = update_card_image,
-        card_form_state = card_form_state)
+        update_card_image = update_card_image)
 
 @blueprint.post('/decks/<int:deck_id>/<deck_title>/<deck_color>')
 @login_required
@@ -85,12 +85,10 @@ def post_noteDeck(deck_id, deck_title, deck_color):
 
     if 'deck-form' in request.form:
 
-        deck_id_data = request.form['id'] or None
         deck_title_data = request.form['title'] or None
         deck_color_data = request.form['color'] or None
-        update_deck_id = request.args.get('update_deck_id')
                 
-        if deck_title_data != None and deck_color_data != None and deck_id_data == None:
+        if deck_title_data != None and deck_color_data != None:
             new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
             new_deck.save()
 
@@ -98,27 +96,44 @@ def post_noteDeck(deck_id, deck_title, deck_color):
             deck_id=new_deck.id, 
             deck_title=new_deck.title, 
             deck_color=new_deck.color))
-                
-        elif deck_title_data != None and deck_color_data != None and deck_id_data != None:
+
+        elif deck_title_data == None or deck_color_data == None:
+
+            error_message = "*please give your deck a title"
+            return redirect(url_for('deck_pages.get_noteDeck',  
+            deck_id=deck_id, 
+            deck_title=deck_title, 
+            deck_color=deck_color, 
+            deck_form_error=error_message))
+
+    elif 'update-deck-form' in request.form:
+
+        deck_id_data = request.form['id'] or None
+        deck_title_data = request.form['title'] or None
+        deck_color_data = request.form['color'] or None
+        update_deck_id = request.args.get('update_deck_id')
+                                
+        if deck_title_data != None and deck_color_data != None and deck_id_data != None:
             update_deck = Deck.query.filter_by(id = update_deck_id).first()
             
             update_deck.title = request.form['title']
             update_deck.color = request.form['color']
-            update_deck.save()
+            update_deck.save()  
 
             return redirect(url_for('deck_pages.get_noteDeck',  
             deck_id=current_deck.id, 
             deck_title=current_deck.title, 
             deck_color=current_deck.color))
 
-        elif deck_title_data != None or deck_color_data != None:
+        elif deck_title_data == None or deck_color_data == None: 
 
-            error_message = "Please fill the deck title"
+            error_message = "*please give your deck a title"
             return redirect(url_for('deck_pages.get_noteDeck',  
             deck_id=deck_id, 
             deck_title=deck_title, 
             deck_color=deck_color, 
-            deck_form_error=error_message))
+            update_deck_id = deck_id_data,
+            update_deck_form_error=error_message))
     
     elif 'card-form' in request.form:
         
@@ -151,16 +166,21 @@ def post_noteDeck(deck_id, deck_title, deck_color):
 
         elif card_id_data != None:
             update_card = Card.query.filter_by(id = update_card_id).first()
-            update_image = Image.query.filter_by(id = update_card_image_id).first()
+            update_image = Image.query.filter_by(id = update_card_image_id).first() or None
             
             update_card.title = request.form['title']
             update_card.content = request.form['content']
             update_card.save()
 
-            if card_image_data.filename:
+            if card_image_data.filename and update_image:
                 update_image.data = base64.b64encode(request.files['image'].read()).decode('utf8')
                 update_image.extention = request.files['image'].mimetype
                 update_image.save()
+
+            elif card_image_data.filename:
+                card_image_base64 = base64.b64encode(card_image_data.read()).decode('utf8')
+                new_card_image = Image(data = card_image_base64, extention = card_image_data.mimetype, card_id = update_card_id)
+                new_card_image.save()
                 
             return redirect(url_for('deck_pages.get_noteDeck',  
             deck_id=deck_id, 
@@ -168,7 +188,7 @@ def post_noteDeck(deck_id, deck_title, deck_color):
             deck_color=deck_color))
 
     elif 'search-form' in request.form:
-        search_term = request.form['search-term'] or None
+        search_term = request.form['search-term'].strip() or None
 
         if search_term != None:
             return redirect(url_for('deck_pages.get_search', current_deck_id = current_deck.id, search_term = search_term)) 
@@ -293,31 +313,32 @@ def updateCard(card_id, current_deck_id):
         deck_title=current_deck.title,
         deck_color=current_deck.color, 
         update_card_id = update_card.id,
-        update_card_image_id = update_card_image.id,
-        card_form_state="flex"))
+        update_card_image_id = update_card_image.id))
     
     elif not update_card_image:
         return redirect(url_for('deck_pages.get_noteDeck',  
         deck_id=current_deck.id, 
         deck_title=current_deck.title,
         deck_color=current_deck.color, 
-        update_card_id = update_card.id,
-        card_form_state="flex"))
+        update_card_id = update_card.id))
 
 
 @blueprint.get('/search/<int:current_deck_id>/<search_term>')
 @login_required
 def get_search(current_deck_id, search_term):
 
+    search_term = search_term
     decks = Deck.query.filter_by(user_id = current_user.id).all()
+    searched_decks = Deck.query.filter(Deck.title.like(f"%{search_term}%")).order_by(Deck.date_created.desc()).all()
     deck_ids = []
     
     for deck_id in db.session.query(Deck.id).filter(Deck.user_id == current_user.id).all():
         deck_ids.append(deck_id[0])
     
-    cards = Card.query.filter(and_((Card.deck_id.in_(deck_ids)), (or_(Card.title.like(f"%{search_term}%"), Card.content.like(f"%{search_term}%"))))).all()
+    cards = Card.query.filter(and_((Card.deck_id.in_(deck_ids)), (or_(Card.title.like(f"%{search_term}%"), Card.content.like(f"%{search_term}%"))))).order_by(Card.date_created.desc()).all()
     current_deck = Deck.query.filter_by(id = current_deck_id).first()
     deck_form_error = request.args.get('deck_form_error')
+    update_deck_form_error = request.args.get('update_deck_form_error')
     update_deck_id = request.args.get('update_deck_id')
     update_deck = Deck.query.filter_by(id = update_deck_id).first()
     update_card_id = request.args.get('update_card_id') 
@@ -330,7 +351,8 @@ def get_search(current_deck_id, search_term):
         return abort(401)
  
     return render_template('note-deck-search.html',  
-        decks=decks, 
+        decks=decks,
+        searched_decks = searched_decks,
         deck_id='#', 
         search_term = search_term,
         search_title=f'Search "{search_term}"', 
@@ -338,10 +360,10 @@ def get_search(current_deck_id, search_term):
         current_deck=current_deck, 
         cards=cards, 
         deck_form_error=deck_form_error,
+        update_deck_form_error=update_deck_form_error,
         update_deck = update_deck,
         update_card = update_card,
-        update_card_image = update_card_image,
-        card_form_state = '#')  
+        update_card_image = update_card_image)  
 
 
 @blueprint.post('/search/<int:current_deck_id>/<search_term>')
@@ -352,12 +374,10 @@ def post_search(current_deck_id, search_term):
 
     if 'deck-form' in request.form:
 
-        deck_id_data = request.form['id'] or None
         deck_title_data = request.form['title'] or None
         deck_color_data = request.form['color'] or None
-        update_deck_id = request.args.get('update_deck_id')
                 
-        if deck_title_data != None and deck_color_data != None and deck_id_data == None:
+        if deck_title_data != None and deck_color_data != None:
             new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
             new_deck.save()
 
@@ -365,10 +385,26 @@ def post_search(current_deck_id, search_term):
             deck_id=new_deck.id, 
             deck_title=new_deck.title, 
             deck_color=new_deck.color))
-                
-        elif deck_title_data != None and deck_color_data != None and deck_id_data != None:
-            update_deck = Deck.query.filter_by(id = update_deck_id).first()
 
+        elif deck_title_data == None or deck_color_data == None:
+
+            error_message = "*please give your deck a title"
+            return redirect(url_for('deck_pages.get_noteDeck',  
+            deck_id=current_deck.id, 
+            deck_title=current_deck.title, 
+            deck_color=current_deck.color, 
+            deck_form_error=error_message))
+
+    elif 'update-deck-form' in request.form:
+
+        deck_id_data = request.form['id'] or None
+        deck_title_data = request.form['title'] or None
+        deck_color_data = request.form['color'] or None
+        update_deck_id = request.args.get('update_deck_id')
+                                
+        if deck_title_data != None and deck_color_data != None and deck_id_data != None:
+            update_deck = Deck.query.filter_by(id = update_deck_id).first()
+            
             update_deck.title = request.form['title']
             update_deck.color = request.form['color']
             update_deck.save()
@@ -378,17 +414,20 @@ def post_search(current_deck_id, search_term):
             deck_title=current_deck.title, 
             deck_color=current_deck.color))
 
-        elif deck_title_data != None or deck_color_data != None:
+        elif deck_title_data == None or deck_color_data == None: 
 
-            error_message = "Please fill the deck title"
+            error_message = "*please give your deck a title"
             return redirect(url_for('deck_pages.get_noteDeck',  
             deck_id=current_deck.id, 
             deck_title=current_deck.title, 
             deck_color=current_deck.color, 
-            deck_form_error=error_message))
-     
+            update_deck_id = deck_id_data,
+            update_deck_form_error=error_message))  
+
     elif 'search-form' in request.form:
-        search_term = request.form['search-term'] or None
+        search_term = request.form['search-term'].strip() or None
+
+        print(search_term)
 
         if search_term != None:
             return redirect(url_for('deck_pages.get_search', current_deck_id = current_deck.id, search_term = search_term)) 
@@ -396,7 +435,7 @@ def post_search(current_deck_id, search_term):
         elif search_term == None:
             return redirect(url_for('deck_pages.get_noteDeck',  
             deck_id=current_deck.id, 
-            deck_title=current_deck.id, 
+            deck_title=current_deck.title, 
             deck_color=current_deck.color))
 
 @blueprint.get('/get-started')
@@ -405,7 +444,7 @@ def get_getStarted():
 
     deck_count = Deck.query.filter_by(user_id = current_user.id).count()
 
-    deck_form_error = request.args.get('deck_form_error')
+    deck_form_error = request.args.get('deck_form_error')   
 
     if deck_count == 0:
         return render_template('note-deck.html', 
@@ -414,7 +453,7 @@ def get_getStarted():
         deck_title='Get-Started', 
         deck_color='#', 
         cards='',
-        deck_form_error = deck_form_error,
+        deck_form_error=deck_form_error,
         update_deck = None,
         update_card = None,
         update_card_image = None)
@@ -426,11 +465,10 @@ def get_getStarted():
 @login_required
 def post_getStarted():
 
-    deck_id_data = request.form['id'] or None
     deck_title_data = request.form['title'] or None
     deck_color_data = request.form['color'] or None
     
-    if deck_title_data != None and deck_color_data != None and deck_id_data == None:
+    if deck_title_data != None and deck_color_data != None:
         new_deck = Deck(title=deck_title_data, color=deck_color_data, user_id=current_user.id)
         new_deck.save()
 
@@ -441,5 +479,5 @@ def post_getStarted():
             
     elif deck_title_data != None:
 
-        error_message = "Please fill the deck title"
+        error_message = "*please give your deck a title"
         return redirect(url_for('deck_pages.get_getStarted', deck_form_error=error_message))

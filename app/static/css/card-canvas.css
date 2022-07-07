@@ -46,6 +46,14 @@
     justify-content: stretch;
 }
 
+.search-results-header {
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 1px solid #DDDDDD;
+    padding-bottom: 8px;
+    margin: 0 40px 16px 40px;
+}
+
 #card-icon {
     height: 34px;
     width: 22px;
@@ -76,7 +84,7 @@
     font-weight: bold;
     font-size: 32px;
     flex-shrink: 0;
-    margin: 0 auto 0 0;
+    margin: 9.5px auto 0 0;
 }
 
 #change-view-button {
@@ -230,22 +238,27 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    gap: 8px;
     position: relative;
 }
 
 .card-title {
+    width: calc(100% - 24px);
+    word-wrap: break-word;
     font-size: 24px;
     font-weight: bold;
-    word-break: break-all;
     color: #747474;
 }
 
 .card-title a {
     all: inherit;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    position: relative;
+}
+
+.card-title a i {
+    bottom: 2px;
+    margin-left: 8px;
+    position: absolute;
 }
 
 .card-title a:hover {
@@ -260,15 +273,28 @@
     gap: 8px;
 }
 
+.card-title.editable * {
+    all: unset;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    font-style: inherit !important;
+    font-size: inherit !important;
+}
+
 .card-action-button {
+    top: 0;
+    left: calc(100% - 16px);
     height: 32px !important;
     width: 32px !important;
     margin: 0 -12px 0 auto;
-    padding: 8px;
     border-radius: 16px;
     border: none;
     flex-shrink: 0;
     background-color: white;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-action-button:hover {
@@ -331,7 +357,7 @@
 }
 
 #card-form {
-    display: var(--display);
+    display: none;
 }
 
 #card-form-header, #card-form-content {
@@ -343,7 +369,7 @@
     outline: none;
 }
 
-.rich-text-buttons-container {
+#rich-text-buttons-container {
     height: 48px;
     display: flex;
     direction: row;
@@ -356,7 +382,7 @@
     border-radius: 24px;
 }
 
-.rich-text-buttons-container button, label{
+#rich-text-buttons-container button, label{
     all:unset;
     height: 32px !important;
     width: 32px !important;
@@ -367,11 +393,11 @@
     justify-content: center;
 }
 
-.rich-text-buttons-container button:hover, label:hover{
+#rich-text-buttons-container button:hover, label:hover{
     background-color: #F2F2F2;
 }
 
-.card-form-actions-container {
+#card-form-actions-container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -381,21 +407,173 @@
     padding: 8px 0 0 0;
 }
 
-.card-form-actions-container button {
+#card-form-actions-container button, .card-form-actions-container a {
+    all: unset;
     height: 24px;
     color: #8D8D8D;
     font-weight: bold;
     font-size: 12px;
-    font-family: consolas, 'Segoe UI', sans-serif;
+    font-family: consolas, 'IBM Plex Mono', 'Segoe UI', sans-serif;
     padding: 0 16px 0 16px;
     border: none;
     outline: 1px solid #DDDDDD;
     border-radius: 12px;
     background: #FFFFFF;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card-form-actions-container button:hover {
+#card-form-actions-container button:hover {
     outline: none;
     background-color: #F2F2F2;
+}
+
+#update-deck-form-background {
+    height: calc(100vh - 64px);
+    width: 100vw;
+    margin-top: 64px;
+    position: absolute;
+    display: none;
+    overflow: auto;
+    place-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+#update-deck-form-container {   
+    height: fit-content;
+    display: flex;
+    margin: 0 16px 0 16px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    outline: 2px solid #DDDDDD;
+    border-radius: 8px;
+    padding: 32px;
+    background-color: white;
+}
+
+#update-deck-form-container input[type="text"] {
+    all: unset;
+    width: calc(100% - 40px);
+    font-size: 24px;
+    font-family: consolas, 'IBM Plex Mono', 'Segoe UI', sans-serif;
+    font-weight: bold;    
+}
+
+#update-deck-form-container input[type="text"]::placeholder {
+    color: #A6A6A6;
+}
+
+#update-deck-form-container input[type="color"] {    
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+#update-deck-form-container input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#update-deck-form-container input[type="color"]::-webkit-color-swatch {
+	border: none;
+}
+
+#update-deck-form-container form #pallet-icon {
+    right: 0;
+    display: inline-block;
+    height: 16px !important;
+    width: 16px !important;
+    pointer-events: none;
+    position: absolute;
+    margin: 0 8px 0 8px;
+    background-image: url('/static/assets/Color-Pallet.svg');
+    background-size: 16px 16px;
+}
+
+#update-deck-form-container form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+#update-deck-form-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #DDDDDD;
+    margin-top: 24px;
+    padding: 8px 0 0 0;
+}
+
+#update-deck-form-actions button {
+    all: unset;
+    height: 24px;
+    color: #8D8D8D;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: consolas, 'IBM Plex Mono', 'Segoe UI', sans-serif;
+    padding: 0 16px 0 16px;
+    border: none;
+    outline: 1px solid #DDDDDD;
+    border-radius: 12px;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#update-deck-form-actions button:hover {
+    outline: none;
+    background-color: #F2F2F2;
+}
+
+#update-deck-form-error {
+    width: 240px;
+    color: tomato;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: -8px;
+}
+
+#searched-decks-container {
+    margin: 0 40px 32px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 16px;
+}
+
+.searched-deck {  
+    font-size: 24px;
+    font-weight: bold;
+    outline: 2px solid #DDDDDD;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: white;
+}
+
+.searched-deck a {
+    color: inherit;
+    text-decoration: inherit;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.searched-deck .link-icon {
+    margin-left: auto;
+}
+
+.searched-deck a:hover {
+    color: #999999;
 }

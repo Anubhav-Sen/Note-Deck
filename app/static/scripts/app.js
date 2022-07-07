@@ -7,6 +7,9 @@ var deckNav = document.getElementById('deck-navigation');
 var deckTitleInput = document.querySelector('#deck-input-form input[type=text]')
 var decks = document.getElementById('decks');
 var deckActionButtons = document.querySelectorAll('.deck-action-button');
+var updateDeckFormOverlay = document.getElementById('update-deck-form-background');
+var updateDeckForm = document.getElementById('update-deck-form-container');
+var updateDeckFormCloseButton = document.getElementById('update-deck-form-close-button');
 var noDecksMessage = document.getElementById('no-decks');
 var noCardsMessage = document.getElementById('no-cards');
 var noResultsMessage = document.getElementById('no-results');
@@ -15,6 +18,7 @@ var deck = document.getElementById('deck');
 var changeViewButton = document.getElementById('change-view-button');
 var addCardButton = document.getElementById('add-card-button');
 var noDeckMessage = document.getElementById('no-deck');
+var searchedDecksContainer = document.getElementById('searched-decks-container');
 var cards = document.getElementsByClassName('card');
 var cardActionButtons = document.querySelectorAll('.card-action-button');
 var cardForm = document.getElementById('card-form');
@@ -42,7 +46,7 @@ var regenGridOnElementResize = new ResizeObserver(generateGrid);
 var meta = document.createElement('meta');
 
 meta.name = 'viewport';
-meta.content = 'width=device-width,height='+window.innerHeight+', initial-scale=1.0';
+meta.content = 'width=device-width,height=' + window.innerHeight + ', initial-scale=1.0';
 document.getElementsByTagName('head')[0].appendChild(meta);
 
 window.addEventListener('load', checkWindowWidth);
@@ -51,6 +55,8 @@ window.addEventListener('load', generateGrid);
 window.addEventListener('load', ifNoDecks);
 window.addEventListener('load', ifNoCards);
 window.addEventListener('load', ifNoResults);
+window.addEventListener('load', ifDeckEditing);
+window.addEventListener('load', ifCardEditing);
 
 window.addEventListener('resize', function () {
     if (document.querySelector('#deck-input-form input[type=text]') != document.activeElement) {
@@ -69,77 +75,87 @@ profileMenuButton.addEventListener('click', toggleProfileMenu);
 changeViewButton.addEventListener('click', toggleView);
 changeViewButton.addEventListener('click', generateGrid);
 
-changeViewButton.addEventListener('click', toggleView);
-changeViewButton.addEventListener('click', generateGrid);
+deckTitleInput.addEventListener('focus', function () {
 
-deckTitleInput.addEventListener('focus', function() {
-    
     if (window.innerWidth < 872) {
-        console.log('works')
         deckNav.style.display = "flex";
     }
 })
 
-deckActionButtons.forEach(function(deckActionButton) {
+deckActionButtons.forEach(function (deckActionButton) {
 
     var actionButtonsContainer = deckActionButton.parentElement.querySelector('.deck-action-buttons-container');
 
-    deckActionButton.addEventListener('click', function() {   
-        
-        if (window.getComputedStyle(actionButtonsContainer).display === "none") { 
-            
-            actionButtonsContainer.style.display = "flex";
-            
-        } else if (window.getComputedStyle(actionButtonsContainer).display === "flex") { 
+    deckActionButton.addEventListener('click', function () {
 
-            actionButtonsContainer.style.display = "none";   
+        if (window.getComputedStyle(actionButtonsContainer).display === "none") {
+
+            actionButtonsContainer.style.display = "flex";
+
+        } else if (window.getComputedStyle(actionButtonsContainer).display === "flex") {
+
+            actionButtonsContainer.style.display = "none";
         }
     });
 });
 
-cardActionButtons.forEach(function(cardActionButton) {
+cardActionButtons.forEach(function (cardActionButton) {
 
     var actionButtonsContainer = cardActionButton.parentElement.querySelector('.card-action-buttons-container');
 
-    cardActionButton.addEventListener('click', function() {   
-        
-        if (window.getComputedStyle(actionButtonsContainer).display === "none") { 
-            
-            actionButtonsContainer.style.display = "flex";
-            
-        } else if (window.getComputedStyle(actionButtonsContainer).display === "flex") { 
+    cardActionButton.addEventListener('click', function () {
 
-            actionButtonsContainer.style.display = "none";   
+        if (window.getComputedStyle(actionButtonsContainer).display === "none") {
+
+            actionButtonsContainer.style.display = "flex";
+
+        } else if (window.getComputedStyle(actionButtonsContainer).display === "flex") {
+
+            actionButtonsContainer.style.display = "none";
         }
     });
 });
 
-window.addEventListener('click', function(event) {
+window.addEventListener('click', function (event) {
 
-    deckActionButtons.forEach(function(deckActionButton) {
+    deckActionButtons.forEach(function (deckActionButton) {
 
         var actionButtonsContainer = deckActionButton.parentElement.querySelector('.deck-action-buttons-container');
-    
+
         if (!(event.target === actionButtonsContainer) && !(event.target.parentElement === actionButtonsContainer) && !(event.target === deckActionButton) && !(event.target.parentElement === deckActionButton)) {
             actionButtonsContainer.style.display = "none";
         }
-    
+
     });
 
-    cardActionButtons.forEach(function(cardActionButton) {
+    cardActionButtons.forEach(function (cardActionButton) {
 
         var actionButtonsContainer = cardActionButton.parentElement.querySelector('.card-action-buttons-container');
-    
+
         if (!(event.target === actionButtonsContainer) && !(event.target.parentElement === actionButtonsContainer) && !(event.target === cardActionButton) && !(event.target.parentElement === cardActionButton)) {
             actionButtonsContainer.style.display = "none";
         }
-    
+
     });
 
     if (!(event.target === profileMenu) && !(event.target.parentElement === profileMenu) && !(event.target === profileMenuButton) && !(event.target.parentElement === profileMenuButton)) {
-        
+
         profileMenu.style.display = "none";
     }
+
+    if (!(event.target === deckNav) && !(deckNav.contains(event.target)) && !(event.target === menuButton) && !(event.target.parentElement === menuButton) && (window.innerWidth < 872)) {
+
+        deckNav.style.display = "none";
+        backgroundOverlay.style.display = "none";
+
+    }
+
+    if (!(event.target === updateDeckForm) && !(updateDeckForm.contains(event.target))) {
+
+        updateDeckFormOverlay.style.display = "none";
+        closeUpdateDeckForm()
+    }
+
 })
 
 for (var index = 0; index < cards.length; index++) {
@@ -152,14 +168,15 @@ addCardButton.addEventListener('click', generateGrid);
 closeCardFormButton.addEventListener('click', closeCardForm);
 closeCardFormButton.addEventListener('click', generateGrid);
 
-cardTitleArea.addEventListener('input', plainText);
+updateDeckFormCloseButton.addEventListener('click', closeUpdateDeckForm);
+
 cardTitleArea.addEventListener('input', updateCardTitleInput);
 cardTextArea.addEventListener('input', updateCardContentInput);
 
-boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus();});
-underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus();});
-italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus();});
-listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus();});
+boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus(); });
+underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus(); });
+italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus(); });
+listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus(); });
 
 cardImageInput.addEventListener('change', loadImage);
 cardCloseImageButton.addEventListener('click', closeImage);
@@ -168,14 +185,14 @@ regenGridOnElementResize.observe(cardTitle);
 regenGridOnElementResize.observe(cardContent);
 
 function updateCardTitleInput() {
-    cardTitleInput.value = cardTitleArea.innerHTML;
+    cardTitleInput.value = cardTitleArea.innerHTML.replace(/(<([^>]+)>)/gi, "");
 }
 
 function updateCardContentInput() {
     cardContentInput.value = cardTextArea.innerHTML;
 }
 
-function ifNoDecks(){
+function ifNoDecks() {
 
     if (decks.childElementCount === 0) {
         noDecksMessage.style.display = "flex";
@@ -184,17 +201,52 @@ function ifNoDecks(){
     }
 }
 
-function ifNoCards(){
+function ifNoCards() {
 
     if (grid.childElementCount === 1) {
         noCardsMessage.style.display = "flex";
     }
 }
 
-function ifNoResults(){
+function ifNoResults() {
 
-    if (grid.childElementCount === 0) {
+    if ((grid.childElementCount === 0) && (searchedDecksContainer.childElementCount === 0)) {
         noResultsMessage.style.display = "flex";
+    }
+}
+
+function ifDeckEditing() {
+
+    deckIdInput = document.getElementById('deck-id');
+    deckFormError = document.getElementById('deck-form-error');
+    updateDeckFormError = document.getElementById('update-deck-form-error');
+    updateDeckFormTitleInput = document.querySelector('#update-deck-form-container input[type="text"]');
+
+    if (deckIdInput.value.trim() != "") {
+        updateDeckFormOverlay.style.display = "grid";
+        updateDeckFormTitleInput.setSelectionRange(updateDeckFormTitleInput.value.length, updateDeckFormTitleInput.value.length)
+        updateDeckFormTitleInput.focus()
+    }
+
+    if ((deckIdInput.value.trim() != "") && (updateDeckFormError)) {
+        updateDeckFormOverlay.style.display = "grid";
+        updateDeckFormTitleInput.value = "";
+        updateDeckFormTitleInput.focus()
+    }
+
+    if ((deckFormError) && (window.innerWidth < 872)) {
+        deckNav.style.display = "flex";
+        backgroundOverlay.style.display = "block";
+        backgroundOverlay.style.width = "calc(100vw - 272px)"
+    }
+}
+
+function ifCardEditing() {
+
+    cardIdInput = document.getElementById('card-id');
+
+    if (cardIdInput.value.trim() != "") {
+        cardForm.style.display = "flex";
     }
 }
 
@@ -209,8 +261,8 @@ function checkWindowWidth() {
         deckNav.style.marginTop = "65px";
         backgroundOverlay.style.display = "none";
         cardCanvas.style.width = "100vw";
-        
-        if (addCardButton) {      
+
+        if (addCardButton) {
             addCardButton.style.left = "32px";
         }
 
@@ -222,15 +274,15 @@ function checkWindowWidth() {
         deckNav.style.position = "static";
         deckNav.style.marginTop = "0";
         cardCanvas.style.width = "calc(100vw - 272px)";
-        
-        if (addCardButton) {      
+
+        if (addCardButton) {
             addCardButton.style.left = "304px";
         }
     }
 
     if (window.innerWidth < 400) {
-        
-        if (addCardButton) {      
+
+        if (addCardButton) {
             addCardButton.style.left = "16px";
         }
     }
@@ -276,8 +328,8 @@ function toggleDeckNavigation() {
         deckNav.style.display = "none";
         backgroundOverlay.style.display = "none";
         cardCanvas.style.width = "100vw";
-        
-        if (addCardButton) {      
+
+        if (addCardButton) {
             addCardButton.style.left = "32px";
         }
 
@@ -293,7 +345,7 @@ function toggleDeckNavigation() {
         deckNav.style.display = "flex";
         cardCanvas.style.width = "calc(100vw - 272px)";
 
-        if (addCardButton) {      
+        if (addCardButton) {
             addCardButton.style.left = "304px";
         }
 
@@ -325,7 +377,7 @@ function toggleProfileMenu() {
         profileMenu.style.display = "flex"
 
     } else if (window.getComputedStyle(profileMenu).getPropertyValue('display') === "flex") {
-        
+
         profileMenu.style.display = "none"
 
     }
@@ -371,15 +423,37 @@ function checkColumnCount() {
 }
 
 function openCardForm() {
-    
+
     cardForm.style.display = "flex";
-    noCardsMessage.style.display = "none";
+    noCardsMessage.style.display = "none"
+    cardTitleArea.focus();
 }
 
 function closeCardForm() {
 
+    cardFormInputs = document.querySelectorAll("#card-input-form input");
+
     cardForm.style.display = "none";
+
+    cardTitleArea.innerHTML = "";
+    cardTextArea.innerHTML = "";
+
+    cardFormInputs.forEach(function (input) {
+        input.value = "";
+    });
+
     ifNoCards();
+}
+
+function closeUpdateDeckForm() {
+
+    updateDeckFormInputs = document.querySelectorAll("#update-deck-form input");
+
+    updateDeckFormOverlay.style.display = "none";
+
+    updateDeckFormInputs.forEach(function (input) {
+        input.value = "";
+    });
 }
 
 function toggleView() {
@@ -400,19 +474,6 @@ function toggleView() {
 
         checkColumnCount();
     }
-}
-
-function plainText() {
-
-    cardTitleArea.innerHTML = cardTitleArea.innerHTML.replace(/(<([^>]+)>)/gi, "");
-    var textSelected = window.getSelection();
-    var selectionRange = document.createRange();
-
-    textSelected.removeAllRanges();
-    selectionRange.selectNodeContents(cardTitleArea);
-    selectionRange.collapse(false);
-    textSelected.addRange(selectionRange);
-    cardTitleArea.focus();
 }
 
 function loadImage() {

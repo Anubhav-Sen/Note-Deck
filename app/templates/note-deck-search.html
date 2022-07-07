@@ -23,6 +23,34 @@
         <div id="no-results">
             <span>No results</span>
         </div>
+        
+        {% if cards and searched_decks %}
+
+        <div class="search-results-header">
+            <span>Decks</span>
+        </div>
+
+        {% endif %}
+
+        <div id="searched-decks-container">
+
+            {% for deck in searched_decks %}
+
+            <div class="searched-deck">
+                <a href="{{url_for('deck_pages.get_noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}"><i id="card-icon-small" style="--bgcolor: {{deck.color}}"></i>{{deck.title}}<i class="link-icon"></i></a>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% if searched_decks and cards %}
+
+        <div class="search-results-header">
+            <span>Cards</span>
+        </div>
+
+        {% endif %}
 
         <div id="cards-container">
 
@@ -41,7 +69,7 @@
                     {% if deck.id == card.deck_id %}
 
                     <div class="card-title">
-                        <a href="{{url_for('deck_pages.get_noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}#{{card.id}}"><i class="link-icon"></i>{{card.title}}</a>
+                        <a href="{{url_for('deck_pages.get_noteDeck',  deck_id = deck.id , deck_title = deck.title, deck_color = deck.color)}}#{{card.id}}">{{card.title | safe}}<i class="link-icon"></i></a>
                         <span><i id="card-icon-small" style="--bgcolor: {{deck.color}}"></i> {{deck.title}}</span>
                     </div>
 

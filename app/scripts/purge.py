@@ -6,11 +6,6 @@ from app.extensions.database import db
 app = create_app()
 app.app_context().push()
 
-
-User.query.delete()
-
-db.session.flush()
-
 Deck.query.delete()
 
 db.session.flush()
@@ -22,5 +17,9 @@ db.session.flush()
 Image.query.delete()
 
 db.session.flush()
+
+#User.query.delete()
+
+#db.session.flush()
 
 db.session.commit()
