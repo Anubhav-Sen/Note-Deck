@@ -37,6 +37,7 @@ def post_login():
 
   email = request.form.get('email')
   password = request.form.get('password')
+  destination = request.args.get('next')
 
   try:
     user = User.query.filter_by(email = email).first()
@@ -47,7 +48,11 @@ def post_login():
       raise Exception('The password you entered is incorrect.')
     
     login_user(user)
-    return redirect(url_for('deck_pages.index'))
+    if destination:
+      return redirect(destination)
+
+    else:
+      return redirect(url_for('deck_pages.index'))
     
   except Exception as error_message:
     error = error_message or 'An error occurred while logging in. Please verify your email and password.'
