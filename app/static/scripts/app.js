@@ -61,6 +61,7 @@ window.addEventListener('resize', checkWindowWidth);
 window.addEventListener('resize', checkColumnCount);
 window.addEventListener('resize', generateGrid);
 window.addEventListener('resize', displaceUpdateDeckForm)
+window.addEventListener('resize', setCardCanvasHeight)
 
 menuButton.addEventListener('click', toggleDeckNavigation);
 menuButton.addEventListener('click', generateGrid);
@@ -389,6 +390,10 @@ function toggleProfileMenu() {
         profileMenu.style.display = "none"
 
     }
+}
+
+function setCardCanvasHeight() {
+    cardCanvas.style.height = "" + (window.innerHeight - 64) + "px";
 }
 
 function resizeGridCards() {
