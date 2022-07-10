@@ -427,8 +427,6 @@ def post_search(current_deck_id, search_term):
     elif 'search-form' in request.form:
         search_term = request.form['search-term'].strip() or None
 
-        print(search_term)
-
         if search_term != None:
             return redirect(url_for('deck_pages.get_search', current_deck_id = current_deck.id, search_term = search_term)) 
         
