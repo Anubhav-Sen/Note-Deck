@@ -162,10 +162,25 @@ updateDeckFormCloseButton.addEventListener('click', closeUpdateDeckForm);
 cardTitleArea.addEventListener('input', updateCardTitleInput);
 cardTextArea.addEventListener('input', updateCardContentInput);
 
-boldButton.addEventListener('click', function () { document.execCommand('bold'); cardTextArea.focus(); });
-underlineButton.addEventListener('click', function () { document.execCommand('underline'); cardTextArea.focus(); });
-italicButton.addEventListener('click', function () { document.execCommand('italic'); cardTextArea.focus(); });
-listButton.addEventListener('click', function () { document.execCommand('insertUnorderedList'); cardTextArea.focus(); });
+boldButton.addEventListener('click', function () {
+    document.execCommand('bold', false, null);
+    cardTextArea.focus();    
+});
+
+underlineButton.addEventListener('click', function () {
+    document.execCommand('underline', false, null); 
+    cardTextArea.focus();
+});
+
+italicButton.addEventListener('click', function () {
+    document.execCommand('italic', false, null); 
+    cardTextArea.focus();
+});
+
+listButton.addEventListener('click', function () {
+    document.execCommand('insertUnorderedList', false, null); 
+    cardTextArea.focus();
+});
 
 cardImageInput.addEventListener('change', loadImage);
 cardCloseImageButton.addEventListener('click', closeImage);

@@ -6,6 +6,11 @@ body {
     color: #747474;
 }
 
+button {
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
 #grid-container {
     display: grid;
     grid-template-columns: auto auto;
