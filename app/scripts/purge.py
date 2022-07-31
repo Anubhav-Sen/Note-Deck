@@ -18,8 +18,8 @@ Image.query.delete()
 
 db.session.flush()
 
-#User.query.delete()
+User.query.delete()
 
-#db.session.flush()
+db.session.flush()
 
 db.session.commit()
